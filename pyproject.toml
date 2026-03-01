@@ -32,7 +32,8 @@ dependencies = [
 ]
 
 [project.urls]
-homepage = "https://github.com/reyxbo/reykit/"
+Homepage = "https://www.reyxbo.com"
+Repository = "https://github.com/reyxbo/reykit-py.git"
 
 [build-system]
 requires = ["hatchling"]
