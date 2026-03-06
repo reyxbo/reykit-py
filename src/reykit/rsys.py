@@ -12,7 +12,7 @@
 from typing import Any, TypedDict, Literal, overload
 from collections.abc import Iterable, Sequence
 from sys import path as sys_path, modules as sys_modules
-from os import getpid as os_getpid
+from os import environ as os_environ, getpid as os_getpid
 from os.path import abspath as os_abspath
 from psutil import (
     boot_time as psutil_boot_time,
@@ -41,6 +41,7 @@ from .rbase import Config, throw, get_varname
 
 __all__ = (
     'SystemConfig',
+    'env',
     'add_env_path',
     'reset_env_path',
     'del_modules',
@@ -103,6 +104,9 @@ class SystemConfig(Config):
 
     # Added environment path.
     _added_env_paths: list[str] = []
+
+
+env = os_environ
 
 
 def add_env_path(path: str) -> list[str]:
