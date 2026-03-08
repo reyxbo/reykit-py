@@ -8,7 +8,6 @@
 @Explain : Standard output and input methods.
 """
 
-
 from typing import Any, Literal, Final
 from collections.abc import Callable, Iterable
 import sys
@@ -17,7 +16,6 @@ from os import devnull as os_devnull, isatty as os_isatty, get_terminal_size as 
 from os.path import abspath as os_abspath
 
 from .rbase import T, Config, get_stack_param, get_varname
-
 
 __all__ = (
     'StdoutConfig',
@@ -30,7 +28,6 @@ __all__ = (
     'reset_print',
     'add_print_position'
 )
-
 
 class StdoutConfig(Config):
     """
@@ -55,7 +52,6 @@ class StdoutConfig(Config):
 
     # Added print position.
     _added_print_position: set = set()
-
 
 def get_terminal_size(
     stream: Literal['stdin', 'stdout', 'stderr'] = 'stdout',
@@ -91,7 +87,6 @@ def get_terminal_size(
         terminal_size = default
 
     return terminal_size
-
 
 def echo(
     *data: Any,
@@ -148,7 +143,6 @@ def echo(
 
     # Print.
     print(text)
-
 
 def ask(
     *data: Any,
@@ -210,7 +204,6 @@ def ask(
 
     return string
 
-
 def stop_print() -> None:
     """
     Stop standard output print.
@@ -221,7 +214,6 @@ def stop_print() -> None:
 
     # Update status.
     StdoutConfig._stopped = True
-
 
 def start_print() -> None:
     """
@@ -238,7 +230,6 @@ def start_print() -> None:
     # Update status.
     StdoutConfig._stopped = False
 
-
 def modify_print(preprocess: Callable[[str], str] | None) -> None:
     """
     Modify standard output print write method.
@@ -249,7 +240,6 @@ def modify_print(preprocess: Callable[[str], str] | None) -> None:
         - `Callable[[str], str]`: Input old text, output new text, will trigger printing.
         - `Callable[[str], None]`: Input old text, no output, will not trigger printing.
     """
-
 
     def write(__s: str) -> int | None:
         """
@@ -272,13 +262,11 @@ def modify_print(preprocess: Callable[[str], str] | None) -> None:
             write_len = StdoutConfig._io_stdout_write(__s)
             return write_len
 
-
     # Modify.
     StdoutConfig._io_stdout.write = write
 
     # Update status.
     StdoutConfig._modified = True
-
 
 def reset_print() -> None:
     """
@@ -295,12 +283,10 @@ def reset_print() -> None:
     # Update status.
     StdoutConfig._modified = False
 
-
 def add_print_position() -> None:
     """
     Add position text to standard output.
     """
-
 
     def preprocess(__s: str) -> str:
         """
@@ -337,7 +323,6 @@ def add_print_position() -> None:
         __s = '%s\n%s' % (position, __s)
 
         return __s
-
 
     # Modify.
     modify_print(preprocess)

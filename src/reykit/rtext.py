@@ -8,7 +8,6 @@
 @Explain : Text methods.
 """
 
-
 from typing import Any, Literal, overload
 from collections.abc import Iterable
 from pprint import pformat as pprint_pformat
@@ -16,7 +15,6 @@ from pprint import pformat as pprint_pformat
 from .rbase import throw, is_iterable, get_varname
 from .rmonkey import monkey_pprint_modify_width_judgment
 from .rstdout import get_terminal_size
-
 
 __all__ = (
     'to_text',
@@ -30,10 +28,8 @@ __all__ = (
     'is_zh'
 )
 
-
 # Monkey patch.
 monkey_pprint_modify_width_judgment()
-
 
 def to_text(data: Any, width: int | None = None) -> str:
     """
@@ -70,7 +66,6 @@ def to_text(data: Any, width: int | None = None) -> str:
             text = str(data)
 
     return text
-
 
 def split_text(text: str, max_len: int, by_width: bool = False) -> list[str]:
     """
@@ -120,7 +115,6 @@ def split_text(text: str, max_len: int, by_width: bool = False) -> list[str]:
             texts.append(text_group)
 
     return texts
-
 
 def get_width(text: str) -> int:
     """
@@ -196,7 +190,6 @@ def get_width(text: str) -> int:
 
     return total_width
 
-
 def fill_width(text: str, char: str, width: int, align: Literal['left', 'right', 'center'] = 'right') -> str:
     """
     Text fill character by display width.
@@ -239,7 +232,6 @@ def fill_width(text: str, char: str, width: int, align: Literal['left', 'right',
         new_text = text
 
     return new_text
-
 
 @overload
 def frame_text(
@@ -388,7 +380,6 @@ def frame_text(
     result = '\n'.join(parts)
     return result
 
-
 def frame_data(
     *data: Any,
     title: str | Iterable[str] | None = None,
@@ -447,7 +438,6 @@ def frame_data(
 
     return text
 
-
 def join_data_text(data: Iterable) -> str:
     """
     Join data to text.
@@ -488,7 +478,6 @@ def join_data_text(data: Iterable) -> str:
 
     return text
 
-
 def join_filter_text(data: Iterable, char: str = ',', filter_: tuple = (None, '')) -> str:
     """
     Join and filter text.
@@ -517,7 +506,6 @@ def join_filter_text(data: Iterable, char: str = ',', filter_: tuple = (None, ''
     text = char.join(data)
 
     return text
-
 
 def is_zh(char: str) -> bool:
     """

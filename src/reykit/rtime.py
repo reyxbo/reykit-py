@@ -8,7 +8,6 @@
 @Explain : Time methods.
 """
 
-
 from typing import Any, TypedDict, Literal, NoReturn, overload
 from collections.abc import Callable
 from time import (
@@ -30,7 +29,6 @@ from .rrand import randn
 from .rre import search
 from .rstdout import echo
 
-
 __all__ = (
     'now',
     'time_to',
@@ -41,9 +39,7 @@ __all__ = (
     'TimeMark'
 )
 
-
 RecordData = TypedDict('RecordData', {'timestamp': int, 'datetime': Datetime, 'timedelta': Timedelta | None, 'note': str | None})
-
 
 @overload
 def now(format_: Literal['datetime'] = 'datetime') -> Datetime: ...
@@ -112,7 +108,6 @@ def now(
             return int(time_time())
         case _:
             throw(ValueError, format_)
-
 
 @overload
 def time_to(
@@ -221,7 +216,6 @@ def time_to(
 
     return text
 
-
 def text_to_time(
     string: str
 ) -> Datetime | Date | Time | None:
@@ -304,7 +298,6 @@ def text_to_time(
             time_obj = Time(hour, minute, second)
             return time_obj
 
-
 @overload
 def to_time(obj: str, raising: bool = True) -> Datetime | Date | Time: ...
 
@@ -376,7 +369,6 @@ def to_time(
 
     return time_obj
 
-
 @overload
 def sleep() -> int: ...
 
@@ -430,7 +422,6 @@ def sleep(
     time_sleep(second)
 
     return second
-
 
 def wait(
     func: Callable[..., bool],
@@ -499,7 +490,6 @@ def wait(
     tm()
     return tm.total_spend
 
-
 class TimeMark(Base):
     """
     Time mark type.
@@ -513,7 +503,6 @@ class TimeMark(Base):
     >>> print(timemark)
     """
 
-
     def __init__(self) -> None:
         """
         Build instance attributes.
@@ -521,7 +510,6 @@ class TimeMark(Base):
 
         # Record table.
         self.records: dict[int, RecordData] = {}
-
 
     def mark(self, note: str | None = None) -> int:
         """
@@ -559,7 +547,6 @@ class TimeMark(Base):
         self.records[index] = record
 
         return index
-
 
     def get_report(self, title: str | None = None):
         """
@@ -632,7 +619,6 @@ class TimeMark(Base):
 
         return df_info
 
-
     @property
     def total_spend(self) -> float:
         """
@@ -657,7 +643,6 @@ class TimeMark(Base):
 
         return seconds
 
-
     def clear(self) -> None:
         """
         Clear records.
@@ -665,7 +650,6 @@ class TimeMark(Base):
 
         # Clear.
         self.records.clear()
-
 
     def __str__(self) -> str:
         """
@@ -684,7 +668,6 @@ class TimeMark(Base):
 
         return string
 
-
     def __int__(self) -> int:
         """
         Get total spend seconds, truncate the decimal part.
@@ -699,7 +682,6 @@ class TimeMark(Base):
 
         return total_speend
 
-
     def __float__(self) -> float:
         """
         Get total spend seconds.
@@ -713,6 +695,5 @@ class TimeMark(Base):
         total_speend = self.total_spend
 
         return total_speend
-
 
     __call__ = __getitem__ = mark

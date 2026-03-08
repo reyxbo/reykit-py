@@ -8,7 +8,6 @@
 @Explain : Multi task methods.
 """
 
-
 from typing import Any, Literal, overload
 from collections.abc import Iterable, Sequence, Callable, Generator, Coroutine
 from threading import RLock as TRLock, get_ident as threading_get_ident
@@ -34,7 +33,6 @@ from .rbase import T, Base, throw, check_most_one, is_iterable
 from .rtime import randn, TimeMark
 from .rwrap import wrap_thread
 
-
 __all__ = (
     'ThreadPool',
     'async_gather',
@@ -45,9 +43,7 @@ __all__ = (
     'AsyncPool'
 )
 
-
 type CallableCoroutine = Coroutine | ATask | Callable[[], Coroutine]
-
 
 class ThreadPool(Base):
     """
@@ -56,7 +52,6 @@ class ThreadPool(Base):
 
     Queue = QQueue
     Lock = TRLock
-
 
     def __init__(
         self,
@@ -87,7 +82,6 @@ class ThreadPool(Base):
             task.__name__
         )
         self.futures: list[CFuture] = []
-
 
     def one(
         self,
@@ -128,7 +122,6 @@ class ThreadPool(Base):
         self.futures.append(future)
 
         return future
-
 
     def batch(
         self,
@@ -185,7 +178,6 @@ class ThreadPool(Base):
 
         return futures
 
-
     def repeat(
         self,
         number: int
@@ -213,7 +205,6 @@ class ThreadPool(Base):
 
         return futures
 
-
     def generate(
         self,
         timeout: float | None = None
@@ -240,7 +231,6 @@ class ThreadPool(Base):
 
         return generator
 
-
     def join(
         self,
         timeout: float | None = None
@@ -262,7 +252,6 @@ class ThreadPool(Base):
         for _ in generator:
             pass
 
-
     def __iter__(self) -> Generator:
         """
         Return the generator of task result.
@@ -280,7 +269,6 @@ class ThreadPool(Base):
         for future in generator:
             yield future.result()
 
-
     @property
     def thread_id(self) -> int:
         """
@@ -296,11 +284,9 @@ class ThreadPool(Base):
 
         return thread_id
 
-
     __call__ = one
 
     __mul__ = repeat
-
 
 @overload
 async def async_gather(
@@ -395,7 +381,6 @@ async def async_gather(
 
     return results
 
-
 @overload
 def async_run(
     coroutine: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
@@ -464,7 +449,6 @@ def async_run(
 
     return results
 
-
 @overload
 async def async_sleep() -> int: ...
 
@@ -515,7 +499,6 @@ async def async_sleep(*thresholds: float, precision: int | None = None) -> float
     await asyncio_sleep(second)
 
     return second
-
 
 async def async_wait(
     func: Callable[..., bool],
@@ -583,7 +566,6 @@ async def async_wait(
     ## Return.
     tm()
     return tm.total_spend
-
 
 @overload
 async def async_request(
@@ -880,7 +862,6 @@ async def async_request(
 
             return result
 
-
 class AsyncPool(Base):
     """
     Asynchronous pool type.
@@ -888,7 +869,6 @@ class AsyncPool(Base):
 
     Queue = AQueue
     Lock = ALock
-
 
     def __init__(
         self,
@@ -916,7 +896,6 @@ class AsyncPool(Base):
         # Start.
         self.__start_loop()
 
-
     @wrap_thread
     def __start_loop(self) -> None:
         """
@@ -928,7 +907,6 @@ class AsyncPool(Base):
 
         ## Start and block.
         self.loop.run_forever()
-
 
     def one(
         self,
@@ -962,7 +940,6 @@ class AsyncPool(Base):
 
         # Save.
         self.futures.append(future)
-
 
     def batch(
         self,
@@ -1009,7 +986,6 @@ class AsyncPool(Base):
         for args_, kwargs_ in params_zip:
             self.one(*args_, **dict(kwargs_))
 
-
     def repeat(
         self,
         number: int
@@ -1025,7 +1001,6 @@ class AsyncPool(Base):
         # Batch add.
         for _ in range(number):
             self.one()
-
 
     def generate(
         self,
@@ -1053,7 +1028,6 @@ class AsyncPool(Base):
 
         return generator
 
-
     def join(
         self,
         timeout: float | None = None
@@ -1075,7 +1049,6 @@ class AsyncPool(Base):
         for _ in generator:
             pass
 
-
     def __iter__(self) -> Generator:
         """
         Return the generator of task result.
@@ -1093,7 +1066,6 @@ class AsyncPool(Base):
         for future in generator:
             yield future.result()
 
-
     def __del__(self) -> None:
         """
         End loop.
@@ -1101,7 +1073,6 @@ class AsyncPool(Base):
 
         # Stop.
         self.loop.stop()
-
 
     __call__ = one
 

@@ -12,11 +12,9 @@ Modules
 rdll_core : DLL file code methods.
 """
 
-
 __all__ = (
     'inject_dll',
 )
-
 
 def inject_dll(
     id_: int,

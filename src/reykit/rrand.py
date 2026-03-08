@@ -8,7 +8,6 @@
 @Explain : Random methods.
 """
 
-
 from typing import Literal, Self, overload
 from collections.abc import Sequence
 from string import digits as string_digits, ascii_letters as string_ascii_letters, punctuation as string_punctuation
@@ -20,7 +19,6 @@ from threading import get_ident as threading_get_ident
 from .rbase import T, Base, Config, throw
 from .rnum import digits
 
-
 __all__ = (
     'RandomConfig',
     'RandomSeed',
@@ -31,7 +29,6 @@ __all__ = (
     'randsort'
 )
 
-
 class RandomConfig(Config):
     """
     Random config type.
@@ -39,7 +36,6 @@ class RandomConfig(Config):
 
     # RRandom.
     _rrandom_dict: dict[int, 'RandomSeed'] = {}
-
 
 class RandomSeed(Base):
     """
@@ -58,7 +54,6 @@ class RandomSeed(Base):
     >>> with RandomSeed(seed):
     >>>     randn()
     """
-
 
     def __init__(self, seed: int | float | str | bytes | bytearray | None = None) -> None:
         """
@@ -84,7 +79,6 @@ class RandomSeed(Base):
             thread_id = threading_get_ident()
             RandomConfig._rrandom_dict[thread_id] = self
 
-
     def __del__(self) -> None:
         """
         Delete instance.
@@ -94,7 +88,6 @@ class RandomSeed(Base):
         thread_id = threading_get_ident()
         if thread_id in RandomConfig._rrandom_dict:
             del RandomConfig._rrandom_dict[thread_id]
-
 
     def __enter__(self) -> Self:
         """
@@ -107,7 +100,6 @@ class RandomSeed(Base):
 
         return self
 
-
     def __exit__(
         self,
         *_
@@ -118,7 +110,6 @@ class RandomSeed(Base):
 
         # Delete.
         self.__del__()
-
 
 @overload
 def randn() -> int: ...
@@ -203,7 +194,6 @@ def randn(*thresholds: float, precision: int | None = None) -> int | float:
 
     return number
 
-
 def randb(pr: float = 0.5) -> bool:
     """
     Random bool.
@@ -234,7 +224,6 @@ def randb(pr: float = 0.5) -> bool:
         throw(ValueError, pr)
 
     return result
-
 
 @overload
 def randi(
@@ -311,7 +300,6 @@ def randi(
 
     return result
 
-
 def randchar(
     length: int = 32,
     punctuation: bool = True
@@ -339,7 +327,6 @@ def randchar(
     chars = ''.join(char_list)
 
     return chars
-
 
 def randsort(data: Sequence[T]) -> list[T]:
     """

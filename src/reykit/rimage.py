@@ -8,7 +8,6 @@
 @Explain : Image methods.
 """
 
-
 from typing import Any
 from io import BytesIO
 from qrcode import make as qrcode_make
@@ -20,7 +19,6 @@ from .rmonkey import monkey_path_pil_image_get_bytes
 from .ros import File
 from .rrand import randchar
 
-
 __all__ = (
     'Image',
     'encode_qrcode',
@@ -30,11 +28,9 @@ __all__ = (
     'generate_captcha_image'
 )
 
-
 # Monkey patch.
 Image_ = monkey_path_pil_image_get_bytes()
 Image = Image_
-
 
 def encode_qrcode(text: str, path: str | None = None) -> bytes:
     """
@@ -65,7 +61,6 @@ def encode_qrcode(text: str, path: str | None = None) -> bytes:
         file.write(file_bytes)
 
     return file_bytes
-
 
 def decode_qrcode(image: str | bytes) -> list[str]:
     """
@@ -102,7 +97,6 @@ def decode_qrcode(image: str | bytes) -> list[str]:
     ]
 
     return texts
-
 
 def compress_image(
     input_image: str | bytes,
@@ -183,7 +177,6 @@ def compress_image(
         file = File(ouput_image)
         file(content)
 
-
 def to_pil_image(source: str | bytes) -> Image:
     """
     Get `Image` instance of `PIL` package.
@@ -209,7 +202,6 @@ def to_pil_image(source: str | bytes) -> Image:
         pil_image = pil_open(bytes_io)
 
     return pil_image
-
 
 def generate_captcha_image(
     text: int | str = 5,

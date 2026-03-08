@@ -8,7 +8,6 @@
 @Explain : Schedule methods.
 """
 
-
 from typing import Any
 from collections.abc import Callable
 from types import ModuleType
@@ -24,13 +23,11 @@ from reykit.rtime import now
 
 from .rbase import Base, throw
 
-
 __all__ = (
     'ScheduleStatusEnum',
     'DatabaseORMTableSchedule',
     'Schedule'
 )
-
 
 class ScheduleStatusEnum(StrEnum):
     """
@@ -43,7 +40,6 @@ class ScheduleStatusEnum(StrEnum):
     'Schedule successded.'
     FAIL = 'fail'
     'Schedule failed.'
-
 
 class DatabaseORMTableSchedule(rorm.Table):
     """
@@ -59,13 +55,11 @@ class DatabaseORMTableSchedule(rorm.Table):
     task: str = rorm.Field(rorm.types.VARCHAR(100), not_null=True, comment='Schedule task function name.')
     note: str = rorm.Field(rorm.types.VARCHAR(500), comment='Schedule note.')
 
-
 class Schedule(Base):
     """
     Schedule type.
     Can create database used "self.build_db" method.
     """
-
 
     def __init__(
         self,
@@ -117,7 +111,6 @@ class Schedule(Base):
         ## Build Database.
         if self.db_engine is not None:
             self.build_db()
-
 
     def build_db(self) -> None:
         """
@@ -199,7 +192,6 @@ class Schedule(Base):
         # ## Error.
         self.db_engine.error.build_db()
 
-
     def run(self) -> None:
         """
         Run the scheduler to start.
@@ -211,7 +203,6 @@ class Schedule(Base):
 
         # Pause.
         self.scheduler.start()
-
 
     def stop(self) -> None:
         """
@@ -225,7 +216,6 @@ class Schedule(Base):
         # Pause.
         self.scheduler.pause()
 
-
     def start(self) -> None:
         """
         Start stopped scheduler.
@@ -237,7 +227,6 @@ class Schedule(Base):
 
         # Resume.
         self.scheduler.resume()
-
 
     def tasks(self) -> list[Job]:
         """
@@ -253,9 +242,7 @@ class Schedule(Base):
 
         return jobs
 
-
     __iter__ = tasks
-
 
     def wrap_record_db(
         self,
@@ -272,7 +259,6 @@ class Schedule(Base):
         name : Task name.
         note : Task note.
         """
-
 
         @functools_wraps(task)
         def _task(*args, **kwargs) -> None:
@@ -332,7 +318,6 @@ class Schedule(Base):
 
         return _task
 
-
     def wrap_echo(
         self,
         task: Callable,
@@ -346,7 +331,6 @@ class Schedule(Base):
         task : Task.
         name : Task name.
         """
-
 
         @functools_wraps(task)
         def _task(*args, **kwargs) -> None:
@@ -367,9 +351,7 @@ class Schedule(Base):
             task(*args, **kwargs)
             print(f'Finish  | {name}')
 
-
         return _task
-
 
     def add_task(
         self,
@@ -440,7 +422,6 @@ class Schedule(Base):
 
         return job
 
-
     def update_task(
         self,
         task: Job | str,
@@ -501,7 +482,6 @@ class Schedule(Base):
         if self.echo:
             print(f'Update | {task_name}')
 
-
     def remove_task(
         self,
         task: Job | str
@@ -530,7 +510,6 @@ class Schedule(Base):
         if self.echo:
             print(f'Remove | {task_name}')
 
-
     def stop_task(
         self,
         task: Job | str   
@@ -558,7 +537,6 @@ class Schedule(Base):
         # Echo.
         if self.echo:
             print(f'Stop   | {task_name}')
-
 
     def start_task(
         self,

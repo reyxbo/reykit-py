@@ -8,7 +8,6 @@
 @Explain : Base methods.
 """
 
-
 from typing import Any, Literal, Callable, Self, TypeVar, Type, NoReturn, overload, final
 from types import CoroutineType
 from collections.abc import Callable, Iterable, Container, Mapping
@@ -22,7 +21,6 @@ from time import sleep as time_sleep
 from inspect import signature as inspect_signature, _ParameterKind, _empty
 from ast import AST, Name, Attribute, Call, Starred, keyword, dump as ast_dump
 from varname import VarnameException, argname as varname_argname
-
 
 __all__ = (
     'T',
@@ -66,7 +64,6 @@ __all__ = (
     'copy_type_hints'
 )
 
-
 # Generic.
 T = TypeVar('T') # Any.
 U = TypeVar('U') # Any.
@@ -79,18 +76,15 @@ type CallableSimple = Callable[[], Any]
 type CoroutineFunction = Callable[..., CoroutineType]
 type CoroutineFunctionSimple = Callable[[], CoroutineType]
 
-
 class Base(object):
     """
     Base type.
     """
 
-
 class StaticMeta(Base, type):
     """
     Static meta type.
     """
-
 
     def __call__(cls):
         """
@@ -100,12 +94,10 @@ class StaticMeta(Base, type):
         # Throw exception.
         raise TypeError('static class, no instances allowed.')
 
-
 class ConfigMeta(StaticMeta):
     """
     Config meta type.
     """
-
 
     def __getitem__(cls, name: str) -> Any:
         """
@@ -125,7 +117,6 @@ class ConfigMeta(StaticMeta):
 
         return value
 
-
     def __setitem__(cls, name: str, value: Any) -> None:
         """
         Set config value.
@@ -137,7 +128,6 @@ class ConfigMeta(StaticMeta):
 
         # Set.
         setattr(cls, name, value)
-
 
     def __contains__(cls, name: str) -> bool:
         """
@@ -157,15 +147,12 @@ class ConfigMeta(StaticMeta):
 
         return result
 
-
 class Config(Base, metaclass=ConfigMeta):
     """
     Config type.
     """
 
-
 type NullType = type['Null']
-
 
 @final
 class Null(Base, metaclass=StaticMeta):
@@ -182,7 +169,6 @@ class Null(Base, metaclass=StaticMeta):
     Type = NullType
     'Type hints of self.'
 
-
 class Singleton(Base):
     """
     Singleton type.
@@ -191,7 +177,6 @@ class Singleton(Base):
 
     __instance: Self
     'Global singleton instance.'
-
 
     def __new__(self, *arg: Any, **kwargs: Any) -> Self:
         """
@@ -212,24 +197,20 @@ class Singleton(Base):
 
         return self.__instance
 
-
 class ErrorBase(Base, BaseException):
     """
     Base error type.
     """
-
 
 class Exit(ErrorBase):
     """
     Exit type.
     """
 
-
 class Error(ErrorBase):
     """
     Error type.
     """
-
 
 def throw(
     exception: type[BaseException],
@@ -306,7 +287,6 @@ def throw(
     exception = exception(text)
     raise exception
 
-
 def warn(
     *infos: Any,
     exception: type[BaseException] = UserWarning,
@@ -336,7 +316,6 @@ def warn(
     # Throw warning.
     warnings_warn(infos, exception, stacklevel)
 
-
 def catch_exc() -> tuple[str, BaseException, StackSummary]:
     """
     Catch or print exception data, must used in `except` syntax.
@@ -356,7 +335,6 @@ def catch_exc() -> tuple[str, BaseException, StackSummary]:
     stack = extract_tb(traceback)
 
     return exc_text, exc, stack
-
 
 @overload
 def check_least_one(*values: None) -> NoReturn: ...
@@ -388,7 +366,6 @@ def check_least_one(*values: Any) -> None:
         vars_name_str = ''
     raise TypeError(f'at least one of parameters{vars_name_str} is not None')
 
-
 def check_most_one(*values: Any) -> None:
     """
     Check that at most one of multiple values is not null, when check fail, then throw exception.
@@ -416,7 +393,6 @@ def check_most_one(*values: Any) -> None:
 
             exist = True
 
-
 def check_file_found(path: str) -> None:
     """
     Check if file path found, if not, throw exception.
@@ -433,7 +409,6 @@ def check_file_found(path: str) -> None:
     if not exist:
         throw(FileNotFoundError, path)
 
-
 def check_file_exist(path: str) -> None:
     """
     Check if file path exist, if exist, throw exception.
@@ -449,7 +424,6 @@ def check_file_exist(path: str) -> None:
     # Throw exception.
     if exist:
         throw(FileExistsError, path)
-
 
 def is_class(obj: Any) -> bool:
     """
@@ -469,7 +443,6 @@ def is_class(obj: Any) -> bool:
 
     return judge
 
-
 def is_instance(obj: Any) -> bool:
     """
     Judge whether it is instance.
@@ -487,7 +460,6 @@ def is_instance(obj: Any) -> bool:
     judge = not is_class(obj)
 
     return judge
-
 
 def is_iterable(
     obj: Any,
@@ -518,7 +490,6 @@ def is_iterable(
 
     return False
 
-
 def is_num_str(
     string: str
 ) -> bool:
@@ -541,7 +512,6 @@ def is_num_str(
         return False
 
     return True
-
 
 @overload
 def get_first_notnone(*values: None, default: T) -> T: ...
@@ -586,7 +556,6 @@ def get_first_notnone(*values: T, default: U | Null.Type = Null) -> T | U:
         throw(ValueError, text=text)
 
     return default
-
 
 def get_stack_text(format_: Literal['plain', 'full'] = 'plain', limit: int = 2) -> str:
     """
@@ -645,7 +614,6 @@ def get_stack_text(format_: Literal['plain', 'full'] = 'plain', limit: int = 2) 
 
     return text
 
-
 @overload
 def get_stack_param(format_: Literal['floor'] = 'floor', limit: int = 2) -> dict: ...
 
@@ -703,7 +671,6 @@ def get_stack_param(format_: Literal['floor', 'full'] = 'floor', limit: int = 2)
             ]
 
     return params
-
 
 def get_arg_info(func: Callable) -> list[
     dict[
@@ -766,7 +733,6 @@ def get_arg_info(func: Callable) -> list[
 
     return info
 
-
 def get_astname(obj: AST) -> str:
     """
     Get object mapping name of `ast` package.
@@ -798,7 +764,6 @@ def get_astname(obj: AST) -> str:
         name = get_astname(name)
 
     return name
-
 
 def get_varname(argname: str, level: int = 1) -> str | list[str] | None:
     """
@@ -841,7 +806,6 @@ def get_varname(argname: str, level: int = 1) -> str | list[str] | None:
 
     return varnames
 
-
 def block() -> None:
     """
     Blocking program, can be double press interrupt to end blocking.
@@ -866,7 +830,6 @@ def block() -> None:
 
             except BaseException:
                 continue
-
 
 def at_exit(*contents: str | Callable | tuple[Callable, Iterable, Mapping]) -> list[Callable]:
     """
@@ -900,7 +863,6 @@ def at_exit(*contents: str | Callable | tuple[Callable, Iterable, Mapping]) -> l
     funcs = list(reversed(funcs))
 
     return funcs
-
 
 def copy_type_hints(
     real_func: Callable,

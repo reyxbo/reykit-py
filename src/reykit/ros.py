@@ -8,7 +8,6 @@
 @Explain : Operation system methods.
 """
 
-
 from typing import Any, Literal, TextIO, BinaryIO, overload, TYPE_CHECKING
 if TYPE_CHECKING:
     from _typeshed import OpenTextMode, OpenBinaryMode
@@ -49,7 +48,6 @@ from .rdata import to_json
 from .rre import search, sub
 from .rsys import run_cmd
 
-
 __all__ = (
     'format_path',
     'join_path',
@@ -72,13 +70,11 @@ __all__ = (
     'extract_file_content'
 )
 
-
 type FilePath = str
 type FileText = str
 type FileData = bytes
 type FileSourceStr = FilePath | FileText | TextIOBase
 type FileSourceBytes = FilePath | FileData | BufferedIOBase
-
 
 def format_path(path: str | None = None) -> str:
     """
@@ -104,7 +100,6 @@ def format_path(path: str | None = None) -> str:
 
     return path
 
-
 def join_path(*paths: str) -> str:
     """
     Join path and resolve relative path and replace to forward slash `/`.
@@ -125,7 +120,6 @@ def join_path(*paths: str) -> str:
     path = format_path(path)
 
     return path
-
 
 def get_md5(data: str | bytes) -> str:
     """
@@ -150,7 +144,6 @@ def get_md5(data: str | bytes) -> str:
 
     return md5
 
-
 def make_dir(*paths: str, echo: bool = False) -> None:
     """
     Make directorys.
@@ -165,7 +158,6 @@ def make_dir(*paths: str, echo: bool = False) -> None:
     for path in paths:
         folder = Folder(path)
         folder.make(echo)
-
 
 def find_relpath(abspath: str, relpath: str) -> str:
     """
@@ -214,7 +206,6 @@ def find_relpath(abspath: str, relpath: str) -> str:
 
     return path
 
-
 def read_file_str(source: FileSourceStr) -> str:
     """
     Read file string data.
@@ -257,7 +248,6 @@ def read_file_str(source: FileSourceStr) -> str:
 
     return file_str
 
-
 def read_file_bytes(source: FileSourceBytes) -> bytes:
     """
     Read file bytes data.
@@ -298,7 +288,6 @@ def read_file_bytes(source: FileSourceBytes) -> bytes:
 
     return file_bytes
 
-
 def read_toml(path: 'str | File') -> dict[str, Any]:
     """
     Read and parse TOML file.
@@ -334,12 +323,10 @@ def read_toml(path: 'str | File') -> dict[str, Any]:
 
     return params
 
-
 class File(Base):
     """
     File type.
     """
-
 
     def __init__(self, path: str) -> None:
         """
@@ -352,7 +339,6 @@ class File(Base):
 
         # Set attribute.
         self.path = format_path(path)
-
 
     @overload
     def open(self, mode: 'OpenBinaryMode' = 'wb+') -> BinaryIO: ...
@@ -383,7 +369,6 @@ class File(Base):
 
         return io
 
-
     @overload
     def __getattr__(self, name: Literal['r', 'w', 'a']) -> TextIO: ...
 
@@ -410,7 +395,6 @@ class File(Base):
 
         # Throw exception.
         throw(AttributeError, name)
-
 
     @overload
     def read(self, type_: Literal['bytes'] = 'bytes') -> bytes: ...
@@ -445,7 +429,6 @@ class File(Base):
             content = file.read()
 
         return content
-
 
     def write(
         self,
@@ -485,7 +468,6 @@ class File(Base):
         with self.open(mode) as file:
             file.write(data)
 
-
     def copy(self, path: str) -> None:
         """
         Copy file to path.
@@ -501,7 +483,6 @@ class File(Base):
             path
         )
 
-
     def move(self, path: str) -> None:
         """
         Move file to path.
@@ -516,7 +497,6 @@ class File(Base):
             self.path,
             path
         )
-
 
     def rename(self, name: str) -> str:
         """
@@ -539,7 +519,6 @@ class File(Base):
 
         return move_path
 
-
     def remove(self) -> None:
         """
         Remove file.
@@ -554,7 +533,6 @@ class File(Base):
             command = f'attrib -r "{self.path}"'
             run_cmd(command)
             os_remove(self.path)
-
 
     @property
     def str(self) -> str:
@@ -571,7 +549,6 @@ class File(Base):
 
         return file_str
 
-
     @property
     def bytes(self) -> bytes:
         """
@@ -586,7 +563,6 @@ class File(Base):
         file_bytes = self.read('bytes')
 
         return file_bytes
-
 
     @property
     def name_suffix(self) -> str:
@@ -603,7 +579,6 @@ class File(Base):
 
         return file_name_suffix
 
-
     @property
     def name(self) -> str:
         """
@@ -618,7 +593,6 @@ class File(Base):
         file_name, _ = os_splitext(self.name_suffix)
 
         return file_name
-
 
     @property
     def suffix(self) -> str:
@@ -635,7 +609,6 @@ class File(Base):
 
         return file_suffix
 
-
     @property
     def dir(self) -> str:
         """
@@ -650,7 +623,6 @@ class File(Base):
         file_dir = os_dirname(self.path)
 
         return file_dir
-
 
     @property
     def drive(self) -> str:
@@ -667,7 +639,6 @@ class File(Base):
 
         return file_drive
 
-
     @property
     def size(self) -> int:
         """
@@ -682,7 +653,6 @@ class File(Base):
         file_size = os_getsize(self.path)
 
         return file_size
-
 
     @property
     def ctime(self) -> float:
@@ -699,7 +669,6 @@ class File(Base):
 
         return file_ctime
 
-
     @property
     def mtime(self) -> float:
         """
@@ -715,7 +684,6 @@ class File(Base):
 
         return file_mtime
 
-
     @property
     def atime(self) -> float:
         """
@@ -730,7 +698,6 @@ class File(Base):
         file_atime = os_getatime(self.path)
 
         return file_atime
-
 
     @property
     def md5(self) -> float:
@@ -748,7 +715,6 @@ class File(Base):
 
         return file_md5
 
-
     @property
     def toml(self) -> dict[str, Any]:
         """
@@ -765,7 +731,6 @@ class File(Base):
 
         return params
 
-
     def __bool__(self) -> bool:
         """
         Judge if exist.
@@ -779,7 +744,6 @@ class File(Base):
         file_exist = os_isfile(self.path)
 
         return file_exist
-
 
     def __len__(self) -> int:
         """
@@ -795,7 +759,6 @@ class File(Base):
 
         return file_size
 
-
     def __str__(self) -> str:
         """
         Read content as a string.
@@ -810,7 +773,6 @@ class File(Base):
 
         return file_text
 
-
     def __bytes__(self) -> bytes:
         """
         Read content in byte form.
@@ -824,7 +786,6 @@ class File(Base):
         file_bytes = self.bytes
 
         return file_bytes
-
 
     def __contains__(self, value: 'str | bytes') -> bool:
         """
@@ -853,15 +814,12 @@ class File(Base):
 
         return judge
 
-
     __call__ = write
-
 
 class Folder(Base):
     """
     Folder type.
     """
-
 
     def __init__(self, path: str | None = None) -> None:
         """
@@ -875,7 +833,6 @@ class Folder(Base):
 
         # Set attribute.
         self.path = format_path(path)
-
 
     def paths(
         self,
@@ -950,7 +907,6 @@ class Folder(Base):
 
         return paths
 
-
     @overload
     def search(
         self,
@@ -1015,7 +971,6 @@ class Folder(Base):
                     match_paths.append(path)
             return match_paths
 
-
     def join(self, path: str) -> str:
         """
         Join folder path and relative path.
@@ -1033,7 +988,6 @@ class Folder(Base):
         path = join_path(self.path, path)
 
         return path
-
 
     def make(self, echo: bool = False) -> None:
         """
@@ -1058,7 +1012,6 @@ class Folder(Base):
         if echo:
             print(text)
 
-
     def move(self, path: str) -> None:
         """
         Move folder to path.
@@ -1073,7 +1026,6 @@ class Folder(Base):
             self.path,
             path
         )
-
 
     def rename(self, name: str) -> str:
         """
@@ -1096,7 +1048,6 @@ class Folder(Base):
 
         return move_path
 
-
     @property
     def name(self) -> str:
         """
@@ -1111,7 +1062,6 @@ class Folder(Base):
         folder_name = os_basename(self.path)
 
         return folder_name
-
 
     @property
     def dir(self) -> str:
@@ -1128,7 +1078,6 @@ class Folder(Base):
 
         return folder_dir
 
-
     @property
     def drive(self) -> str:
         """
@@ -1143,7 +1092,6 @@ class Folder(Base):
         folder_drive, _ = os_splitdrive(self.path)
 
         return folder_drive
-
 
     @property
     def size(self) -> int:
@@ -1165,7 +1113,6 @@ class Folder(Base):
 
         return folder_size
 
-
     @property
     def ctime(self) -> float:
         """
@@ -1180,7 +1127,6 @@ class Folder(Base):
         folder_ctime = os_getctime(self.path)
 
         return folder_ctime
-
 
     @property
     def mtime(self) -> float:
@@ -1197,7 +1143,6 @@ class Folder(Base):
 
         return folder_mtime
 
-
     @property
     def atime(self) -> float:
         """
@@ -1213,7 +1158,6 @@ class Folder(Base):
 
         return folder_atime
 
-
     def __bool__(self) -> bool:
         """
         Judge if exist.
@@ -1228,7 +1172,6 @@ class Folder(Base):
 
         return folder_exist
 
-
     def __len__(self) -> int:
         """
         Return folder byte size, include all files in it.
@@ -1242,7 +1185,6 @@ class Folder(Base):
         folder_size = self.size
 
         return folder_size
-
 
     def __contains__(self, relpath: str) -> bool:
         """
@@ -1263,17 +1205,14 @@ class Folder(Base):
 
         return judge
 
-
     __call__ = paths
 
     __add__ = __radd__ = join
-
 
 class TempFile(Base):
     """
     Temporary file type.
     """
-
 
     def __init__(self,
         dir_: str | None = None,
@@ -1307,7 +1246,6 @@ class TempFile(Base):
         )
         self.path = format_path(self.file.name)
 
-
     def read(self) -> bytes | str:
         """
         Read file data.
@@ -1323,7 +1261,6 @@ class TempFile(Base):
 
         return content
 
-
     def write(self, data: str | bytes) -> None:
         """
         Write file data.
@@ -1336,7 +1273,6 @@ class TempFile(Base):
         # Write.
         self.file.write(data)
         self.file.seek(0)
-
 
     @property
     def name_suffix(self) -> str:
@@ -1353,7 +1289,6 @@ class TempFile(Base):
 
         return file_name_suffix
 
-
     @property
     def name(self) -> str:
         """
@@ -1368,7 +1303,6 @@ class TempFile(Base):
         file_name, _ = os_splitext(self.name_suffix)
 
         return file_name
-
 
     @property
     def suffix(self) -> str:
@@ -1385,7 +1319,6 @@ class TempFile(Base):
 
         return file_suffix
 
-
     @property
     def dir(self) -> str:
         """
@@ -1400,7 +1333,6 @@ class TempFile(Base):
         file_dir = os_dirname(self.path)
 
         return file_dir
-
 
     @property
     def drive(self) -> str:
@@ -1417,7 +1349,6 @@ class TempFile(Base):
 
         return file_drive
 
-
     @property
     def size(self) -> int:
         """
@@ -1432,7 +1363,6 @@ class TempFile(Base):
         file_size = os_getsize(self.path)
 
         return file_size
-
 
     @property
     def ctime(self) -> float:
@@ -1449,7 +1379,6 @@ class TempFile(Base):
 
         return file_ctime
 
-
     @property
     def mtime(self) -> float:
         """
@@ -1465,7 +1394,6 @@ class TempFile(Base):
 
         return file_mtime
 
-
     @property
     def atime(self) -> float:
         """
@@ -1480,7 +1408,6 @@ class TempFile(Base):
         file_atime = os_getatime(self.path)
 
         return file_atime
-
 
     @property
     def md5(self) -> float:
@@ -1498,7 +1425,6 @@ class TempFile(Base):
 
         return file_md5
 
-
     @property
     def toml(self) -> dict[str, Any]:
         """
@@ -1515,7 +1441,6 @@ class TempFile(Base):
 
         return params
 
-
     def __len__(self) -> int:
         """
         Return file byte size.
@@ -1529,7 +1454,6 @@ class TempFile(Base):
         file_size = self.size
 
         return file_size
-
 
     def __contains__(self, value: str | bytes) -> bool:
         """
@@ -1552,7 +1476,6 @@ class TempFile(Base):
 
         return judge
 
-
     def __del__(self) -> None:
         """
         Close temporary file.
@@ -1561,15 +1484,12 @@ class TempFile(Base):
         # Close.
         self.file.close()
 
-
     __call__ = write
-
 
 class TempFolder(Base):
     """
     Temporary folder type.
     """
-
 
     def __init__(self, dir_: str | None = None) -> None:
         """
@@ -1583,7 +1503,6 @@ class TempFolder(Base):
         # Set attribute.
         self.folder = TemporaryDirectory(dir=dir_)
         self.path = format_path(self.folder.name)
-
 
     def paths(
         self,
@@ -1658,7 +1577,6 @@ class TempFolder(Base):
 
         return paths
 
-
     @overload
     def search(
         self,
@@ -1723,7 +1641,6 @@ class TempFolder(Base):
                     match_paths.append(path)
             return match_paths
 
-
     def join(self, path: str) -> str:
         """
         Join folder path and relative path.
@@ -1742,7 +1659,6 @@ class TempFolder(Base):
 
         return join_path
 
-
     @property
     def name(self) -> str:
         """
@@ -1757,7 +1673,6 @@ class TempFolder(Base):
         folder_name = os_basename(self.path)
 
         return folder_name
-
 
     @property
     def dir(self) -> str:
@@ -1774,7 +1689,6 @@ class TempFolder(Base):
 
         return folder_dir
 
-
     @property
     def drive(self) -> str:
         """
@@ -1789,7 +1703,6 @@ class TempFolder(Base):
         folder_drive, _ = os_splitdrive(self.path)
 
         return folder_drive
-
 
     @property
     def size(self) -> int:
@@ -1811,7 +1724,6 @@ class TempFolder(Base):
 
         return folder_size
 
-
     @property
     def ctime(self) -> float:
         """
@@ -1826,7 +1738,6 @@ class TempFolder(Base):
         folder_ctime = os_getctime(self.path)
 
         return folder_ctime
-
 
     @property
     def mtime(self) -> float:
@@ -1843,7 +1754,6 @@ class TempFolder(Base):
 
         return folder_mtime
 
-
     @property
     def atime(self) -> float:
         """
@@ -1859,7 +1769,6 @@ class TempFolder(Base):
 
         return folder_atime
 
-
     def __bool__(self) -> bool:
         """
         Judge if exist.
@@ -1874,7 +1783,6 @@ class TempFolder(Base):
 
         return folder_exist
 
-
     def __len__(self) -> int:
         """
         Return folder byte size, include all files in it.
@@ -1888,7 +1796,6 @@ class TempFolder(Base):
         folder_size = self.size
 
         return folder_size
-
 
     def __contains__(self, relpath: str) -> bool:
         """
@@ -1909,7 +1816,6 @@ class TempFolder(Base):
 
         return judge
 
-
     def __del__(self) -> None:
         """
         Close temporary folder.
@@ -1918,17 +1824,14 @@ class TempFolder(Base):
         # Close.
         self.folder.cleanup()
 
-
     __call__ = paths
 
     __add__ = __radd__ = join
-
 
 class FileStore(Base):
     """
     File Store type.
     """
-
 
     def __init__(self, path: str = 'file') -> None:
         """
@@ -1944,7 +1847,6 @@ class FileStore(Base):
 
         # Make directory.
         self.__make_dir()
-
 
     def __make_dir(self) -> None:
         """
@@ -1980,7 +1882,6 @@ class FileStore(Base):
 
         # Make.
         make_dir(*paths)
-
 
     def index(self, md5: str, name: str | None = None, copy: bool = False) -> str | None:
         """
@@ -2022,7 +1923,6 @@ class FileStore(Base):
             file = File(md5_file_path)
             file.copy(file_path)
             return file_path
-
 
     def store(self, source: FileSourceBytes, name: str | None = None, delete: bool = False) -> str:
         """
@@ -2076,7 +1976,6 @@ class FileStore(Base):
 
         return path
 
-
     def download(self, url: str, name: str | None = None, **request_params: Any) -> str:
         """
         Download file from URL.
@@ -2114,7 +2013,6 @@ class FileStore(Base):
 
         return path
 
-
     def get_relpath(self, abspath: str) -> str:
         """
         Get store file relative path based on absolute path.
@@ -2133,7 +2031,6 @@ class FileStore(Base):
 
         return relpath
 
-
     def get_abspath(self, relpath: str) -> str:
         """
         Get store file absolute path based on relative path.
@@ -2151,7 +2048,6 @@ class FileStore(Base):
         abspath = self.folder + relpath
 
         return abspath
-
 
 def compress(
     path: str,
@@ -2209,7 +2105,6 @@ def compress(
                     zip_path = file_path[dir_path_len:]
                     zip_file.write(file_path, zip_path)
 
-
 def decompress(
     obj_path: str,
     build_dir: str | None = None,
@@ -2242,7 +2137,6 @@ def decompress(
     # Decompress.
     with ZipFile(obj_path) as zip_file:
         zip_file.extractall(build_dir, pwd=password)
-
 
 def doc_to_docx(path: str, save_path: str | None = None) -> str:
     """
@@ -2278,7 +2172,6 @@ def doc_to_docx(path: str, save_path: str | None = None) -> str:
     document.Close()
 
     return save_path
-
 
 def extract_docx_content(path: str) -> str:
     """
@@ -2340,7 +2233,6 @@ def extract_docx_content(path: str) -> str:
 
     return content
 
-
 def extract_pdf_content(path: str) -> str:
     """
     Extract content from `PDF` file.
@@ -2369,7 +2261,6 @@ def extract_pdf_content(path: str) -> str:
     content = '\n'.join(contents)
 
     return content
-
 
 def extract_file_content(path: str) -> str:
     """

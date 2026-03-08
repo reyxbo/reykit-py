@@ -8,11 +8,9 @@
 @Explain : Number methods.
 """
 
-
 from typing import Any
 
 from .rbase import throw
-
 
 __all__ = (
     'is_int',
@@ -20,7 +18,6 @@ __all__ = (
     'to_number',
     'number_ch'
 )
-
 
 def is_int(number: int | float) -> bool:
     """
@@ -43,7 +40,6 @@ def is_int(number: int | float) -> bool:
             judge = number % 1 == 0
 
     return judge
-
 
 def digits(number: int | float) -> tuple[int, int]:
     """
@@ -70,7 +66,6 @@ def digits(number: int | float) -> tuple[int, int]:
         dec_digits = len(dec_str)
 
     return int_digits, dec_digits
-
 
 def to_number(
     data: Any,
@@ -103,7 +98,6 @@ def to_number(
             data = int(data)
 
     return data
-
 
 def number_ch(number: int) -> str:
     """

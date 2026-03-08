@@ -8,13 +8,11 @@
 @Explain : Monkey patch methods.
 """
 
-
 __all__ = (
     'monkey_sqlalchemy_result_more_fetch',
     'monkey_sqlalchemy_row_index_field',
     'monkey_pprint_modify_width_judgment'
 )
-
 
 def monkey_sqlalchemy_result_more_fetch():
     """
@@ -57,7 +55,6 @@ def monkey_sqlalchemy_result_more_fetch():
     from .rtable import Table
     from .rtime import time_to
 
-
     # Add.
     @property
     def method_data(self: 'Result') -> Self:
@@ -70,7 +67,6 @@ def monkey_sqlalchemy_result_more_fetch():
         """
 
         return self
-
 
     def method_show(self: 'Result', limit: int | None = None) -> None:
         """
@@ -119,7 +115,6 @@ def monkey_sqlalchemy_result_more_fetch():
         # Print.
         echo(df, title='Result')
 
-
     @property
     def method_exist(self: 'Result') -> bool:
         """
@@ -134,7 +129,6 @@ def monkey_sqlalchemy_result_more_fetch():
         judge = self.rowcount != 0
 
         return judge
-
 
     @property
     def method_empty(self: 'Result') -> bool:
@@ -151,7 +145,6 @@ def monkey_sqlalchemy_result_more_fetch():
 
         return judge
 
-
     CursorResult.data = method_data
     CursorResult.to_table = Table.to_table
     CursorResult.to_row = Table.to_row
@@ -167,7 +160,6 @@ def monkey_sqlalchemy_result_more_fetch():
     CursorResult.show = method_show
     CursorResult.exist = method_exist
     CursorResult.empty = method_empty
-
 
     class Result(Base, CursorResult):
         """
@@ -195,7 +187,6 @@ def monkey_sqlalchemy_result_more_fetch():
 
     return Result
 
-
 def monkey_sqlalchemy_row_index_field():
     """
     Monkey patch of package `sqlalchemy`, add index by field method to `Row` object.
@@ -210,7 +201,6 @@ def monkey_sqlalchemy_row_index_field():
     # Import.
     from typing import Any, overload
     from sqlalchemy.engine.row import Row
-
 
     @overload
     def __getitem__(self, index: str | int) -> Any: ...
@@ -239,10 +229,8 @@ def monkey_sqlalchemy_row_index_field():
 
         return value
 
-
     # Add.
     Row.__getitem__ = __getitem__
-
 
 def monkey_pprint_modify_width_judgment() -> None:
     """
@@ -251,7 +239,6 @@ def monkey_pprint_modify_width_judgment() -> None:
 
     # Import.
     from pprint import PrettyPrinter, _recursion
-
 
     def __format(_self, obj, stream, indent, allowance, context, level):
 
@@ -281,10 +268,8 @@ def monkey_pprint_modify_width_judgment() -> None:
                 return
         stream.write(rep)
 
-
     # Modify.
     PrettyPrinter.__format = __format
-
 
 def monkey_path_pil_image_get_bytes():
     """
@@ -305,7 +290,6 @@ def monkey_path_pil_image_get_bytes():
     from io import BytesIO
     from .rbase import Base
 
-
     def method_get_bytes(self: Image) -> bytes:
         """
         Get image bytes data.
@@ -322,10 +306,8 @@ def monkey_path_pil_image_get_bytes():
 
         return image_bytes
 
-
     # Add.
     Image.get_bytes = method_get_bytes
-
 
     # Update annotations.
     class Image(Base, Image):
@@ -338,6 +320,5 @@ def monkey_path_pil_image_get_bytes():
 
         # Add method.
         get_bytes = method_get_bytes
-
 
     return Image

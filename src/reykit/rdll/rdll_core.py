@@ -8,7 +8,6 @@
 @Explain : DLL file code methods.
 """
 
-
 import ctypes
 from ctypes.wintypes import (
     HANDLE,
@@ -22,17 +21,14 @@ from ctypes.wintypes import (
 )
 import enum
 
-
 def LPVOID_errcheck(result, func, args):
     if not result:
         raise ctypes.WinError()
     return result
 
-
 def Win32API_errcheck(result, func, args):
     if not result:
         raise ctypes.WinError()
-
 
 class SECURITY_ATTRIBUTES(ctypes.Structure):
     _fields_ = [
@@ -40,7 +36,6 @@ class SECURITY_ATTRIBUTES(ctypes.Structure):
         ('lpSecurityDescriptor', LPVOID),
         ('bInheritHandle', BOOL)
     ]
-
 
 INFINITE = ctypes.c_uint(-1)
 SIZE_T = ctypes.c_size_t
@@ -96,7 +91,6 @@ GetExitCodeThread.argtypes = [HANDLE, LPDWORD]
 GetExitCodeThread.restype = BOOL
 GetExitCodeThread.errcheck = Win32API_errcheck
 
-
 class Process(enum.IntFlag):
     CREATE_PROCESS = 0x0080
     CREATE_THREAD = 0x0002
@@ -112,7 +106,6 @@ class Process(enum.IntFlag):
     VM_WRITE = 0x0020
     SYNCHRONIZE = 0x00100000
 
-
 class AllocationType(enum.IntFlag):
     COMMIT = 0x00001000
     RESERVE = 0x00002000
@@ -122,13 +115,11 @@ class AllocationType(enum.IntFlag):
     PHYSICAL = 0x00400000
     TOP_DOWN = 0x00100000
 
-
 class FreeType(enum.IntFlag):
     COALESCE_PLACEHOLDERS = 0x1
     PRESERVE_PLACEHOLDER = 0x2
     DECOMMIT = 0x4000
     RELEASE = 0x8000
-
 
 class PageProtection(enum.IntFlag):
     EXECUTE = 0x10
@@ -144,7 +135,6 @@ class PageProtection(enum.IntFlag):
     GUARD = 0x100
     NOCACHE = 0x200
     WRITECOMBINE = 0x400
-
 
 def InjectDLL(
     target_pid,

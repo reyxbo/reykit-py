@@ -8,7 +8,6 @@
 @Explain : Interpreter system methods.
 """
 
-
 from typing import Any, TypedDict, Literal, overload
 from collections.abc import Iterable, Sequence
 from sys import path as sys_path, modules as sys_modules
@@ -38,7 +37,6 @@ from webbrowser import open as webbrowser_open
 
 from .rbase import Config, throw, get_varname
 
-
 __all__ = (
     'SystemConfig',
     'env',
@@ -64,7 +62,6 @@ __all__ = (
     'popup_ask',
     'popup_select'
 )
-
 
 LoginUsers = TypedDict('LoginUsers', {'time': datetime, 'name': str, 'host': str})
 ComputerInfo = TypedDict(
@@ -98,7 +95,6 @@ NetWorkInfo = TypedDict(
 )
 ProcessInfo = TypedDict('ProcessInfo', {'create_time': datetime, 'id': int, 'name': str, 'ports': list[int] | None})
 
-
 class SystemConfig(Config):
     """
     System config type.
@@ -107,9 +103,7 @@ class SystemConfig(Config):
     # Added environment path.
     _added_env_paths: list[str] = []
 
-
 env = os_environ
-
 
 def read_env(path: str) -> dict[str, str]:
     """
@@ -141,7 +135,6 @@ def read_env(path: str) -> dict[str, str]:
 
     return data
 
-
 def load_env(path: str) -> dict[str, str]:
     """
     Load environment variable file.
@@ -162,7 +155,6 @@ def load_env(path: str) -> dict[str, str]:
     env.update(data)
 
     return data
-
 
 def add_env_path(path: str) -> list[str]:
     """
@@ -186,7 +178,6 @@ def add_env_path(path: str) -> list[str]:
 
     return sys_path
 
-
 def reset_env_path() -> None:
     """
     Reset environment variable path.
@@ -196,7 +187,6 @@ def reset_env_path() -> None:
     for path in SystemConfig._added_env_paths:
         sys_path.remove(path)
     SystemConfig._added_env_paths = []
-
 
 def del_modules(path: str) -> list[str]:
     """
@@ -239,7 +229,6 @@ def del_modules(path: str) -> list[str]:
 
     return deleted_dict
 
-
 @overload
 def run_cmd(command: str | Iterable[str], read: Literal[False] = False) -> None: ...
 
@@ -274,7 +263,6 @@ def run_cmd(command: str | Iterable[str], read: bool = False) -> str | None:
         output = output_bytes.decode('GBK')
 
         return output
-
 
 def get_cmd_var(*vars: Any) -> list[Any]:
     """
@@ -362,7 +350,6 @@ def get_cmd_var(*vars: Any) -> list[Any]:
 
     return values
 
-
 def get_computer_info() -> ComputerInfo:
     """
     Get computer information.
@@ -449,7 +436,6 @@ def get_computer_info() -> ComputerInfo:
 
     return info
 
-
 def get_network_table() -> list[NetWorkInfo]:
     """
     Get network information table.
@@ -507,7 +493,6 @@ def get_network_table() -> list[NetWorkInfo]:
 
     return table
 
-
 def get_process_table() -> list[ProcessInfo]:
     """
     Get process information table.
@@ -547,7 +532,6 @@ def get_process_table() -> list[ProcessInfo]:
     table.sort(key=sort_func)
 
     return table
-
 
 def search_process(
     id_: int | Sequence[int] | None = None,
@@ -634,7 +618,6 @@ def search_process(
 
     return processes
 
-
 def kill_process(
     id_: int | Sequence[int] | None = None,
     name: str | Sequence[str] | None = None,
@@ -671,7 +654,6 @@ def kill_process(
             process.kill()
 
     return processes
-
 
 def stop_process(
     id_: int | Sequence[int] | None = None,
@@ -710,7 +692,6 @@ def stop_process(
 
     return processes
 
-
 def start_process(
     id_: int | Sequence[int] | None = None,
     name: str | Sequence[str] | None = None,
@@ -740,7 +721,6 @@ def start_process(
 
     return processes
 
-
 def get_idle_port(min: int = 49152) -> int:
     """
     Judge and get an idle port number.
@@ -767,7 +747,6 @@ def get_idle_port(min: int = 49152) -> int:
             min += 1
         else:
             return min
-
 
 def memory_read(
     process: int | str,
@@ -807,7 +786,6 @@ def memory_read(
 
     return value
 
-
 def memory_write(
     process: int | str,
     dll: str,
@@ -838,7 +816,6 @@ def memory_write(
     # Read.
     pymem.write_int(memory_address, value)
 
-
 def open_browser(url: str) -> bool:
     """
     Open browser and URL.
@@ -856,7 +833,6 @@ def open_browser(url: str) -> bool:
     succeeded = webbrowser_open(url)
 
     return succeeded
-
 
 def popup_message(
     style: Literal['info', 'warn', 'error'] = 'info',
@@ -894,7 +870,6 @@ def popup_message(
             method = showerror
 
     method(title, message)
-
 
 @overload
 def popup_ask(
@@ -955,7 +930,6 @@ def popup_ask(
             method = askretrycancel
 
     method(title, message)
-
 
 @overload
 def popup_select(

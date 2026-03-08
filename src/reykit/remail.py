@@ -8,7 +8,6 @@
 @Explain : Email methods.
 """
 
-
 from smtplib import SMTP
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -18,17 +17,14 @@ from .rbase import Base, throw
 from .rdata import unique
 from .ros import FileSourceBytes, read_file_bytes
 
-
 __all__ = (
     'Email',
 )
-
 
 class Email(Base):
     """
     Email type.
     """
-
 
     def __init__(
         self,
@@ -54,7 +50,6 @@ class Email(Base):
         self.port = port
         self.smtp = SMTP(host, port)
 
-
     def get_server_address(
         self,
         email: str
@@ -78,7 +73,6 @@ class Email(Base):
 
         return host, port
 
-
     def get_smtp(self) -> SMTP:
         """
         Get `SMTP` connection instance and login.
@@ -95,7 +89,6 @@ class Email(Base):
             throw(ConnectionError, response)
 
         return self.smtp
-
 
     def create_email(
         self,
@@ -163,7 +156,6 @@ class Email(Base):
         email = mimes.as_string()
 
         return email
-
 
     def send_email(
         self,
@@ -262,9 +254,7 @@ class Email(Base):
             email
         )
 
-
     __call__ = send_email
-
 
     def __del__(self) -> None:
         """

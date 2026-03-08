@@ -8,7 +8,6 @@
 @Explain : Log methods.
 """
 
-
 from typing import Any, Literal, Final, overload
 from collections.abc import Hashable, Callable
 from queue import Queue
@@ -36,13 +35,11 @@ from .rtext import to_text
 from .rtime import now, time_to
 from .rwrap import wrap_thread
 
-
 __all__ = (
     'LogConfig',
     'Log',
     'Mark'
 )
-
 
 class LogConfig(Config):
     """
@@ -51,7 +48,6 @@ class LogConfig(Config):
 
     # Module path.
     path_rlog: Final[str] = os_abspath(__file__)
-
 
 class Log(Base):
     """
@@ -81,7 +77,6 @@ class Log(Base):
     ERROR = LERROR
     CRITICAL = LCRITICAL
 
-
     def __init__(
         self,
         name: str = 'Log'
@@ -103,7 +98,6 @@ class Log(Base):
 
         # Set level.
         self.logger.setLevel(self.DEBUG)
-
 
     def __get_message_stack(self) -> dict:
         """
@@ -143,7 +137,6 @@ class Log(Base):
 
         return stack_param
 
-
     def __supply_format_standard(
         self,
         format_: str,
@@ -180,7 +173,6 @@ class Log(Base):
         if '%(format_message)s' in format_:
             record.format_message = record.getMessage()
 
-
     def get_level_color_ansi(
         self,
         level: int
@@ -210,7 +202,6 @@ class Log(Base):
         color_code = color_code_dict.get(level, '')
 
         return color_code
-
 
     def __supply_format_print(
         self,
@@ -265,7 +256,6 @@ class Log(Base):
                 record.format_message
             )
 
-
     def __supply_format_file(
         self,
         format_: str,
@@ -284,7 +274,6 @@ class Log(Base):
         if '%(format_message)s' in format_:
             pattern = '\033\\[[\\d;]+?m'
             record.format_message = sub(pattern, record.format_message)
-
 
     def get_default_filter_method(
         self,
@@ -306,7 +295,6 @@ class Log(Base):
         -------
         Filter method.
         """
-
 
         def default_filter_method(
             record: LogRecord
@@ -338,9 +326,7 @@ class Log(Base):
 
             return True
 
-
         return default_filter_method
-
 
     def get_filter(
         self,
@@ -358,12 +344,10 @@ class Log(Base):
         Filter.
         """
 
-
         class _Filter(Base, Filter):
             """
             Filter type.
             """
-
 
             def filter(
                 record: LogRecord
@@ -385,9 +369,7 @@ class Log(Base):
 
                 return result
 
-
         return _Filter
-
 
     def add_print(
         self,
@@ -433,7 +415,6 @@ class Log(Base):
         self.logger.addHandler(handler)
 
         return handler
-
 
     @overload
     def add_file(
@@ -583,7 +564,6 @@ class Log(Base):
 
         return handler
 
-
     def add_queue(
         self,
         queue: Queue | None = None,
@@ -623,7 +603,6 @@ class Log(Base):
 
         return handler, queue
 
-
     def add_handler(
         self,
         method: Callable[[LogRecord], Any],
@@ -643,7 +622,6 @@ class Log(Base):
         # Add queue out.
         _, queue = self.add_queue(level=level, filter_=filter_)
 
-
         @wrap_thread
         def execute() -> None:
             """
@@ -654,10 +632,8 @@ class Log(Base):
                 record = queue.get()
                 method(record)
 
-
         # Execute.
         execute()
-
 
     def delete_handler(
         self,
@@ -674,7 +650,6 @@ class Log(Base):
         # Delete.
         self.logger.removeHandler(handler)
 
-
     def clear_handler(self) -> None:
         """
         Delete all record handler.
@@ -684,7 +659,6 @@ class Log(Base):
         for handle in self.logger.handlers:
             self.logger.removeHandler(handle)
 
-
     def catch_print(self, printing: bool = True) -> None:
         """
         Catch print to log.
@@ -693,7 +667,6 @@ class Log(Base):
         ----------
         printing : Whether to still print.
         """
-
 
         def preprocess(__s: str) -> str:
             """
@@ -716,13 +689,11 @@ class Log(Base):
             if printing:
                 return __s
 
-
         # Modify.
         modify_print(preprocess)
 
         # Update status.
         self.print_replaced = True
-
 
     def reset_print(self) -> None:
         """
@@ -738,7 +709,6 @@ class Log(Base):
 
         # Update status.
         self.print_replaced = False
-
 
     def log(
         self,
@@ -804,7 +774,6 @@ class Log(Base):
         # Record.
         self.logger.log(level, messages, extra=params)
 
-
     def debug(
         self,
         *messages: Any,
@@ -821,7 +790,6 @@ class Log(Base):
 
         # Record.
         self.log(*messages, level=self.DEBUG, **params)
-
 
     def info(
         self,
@@ -840,7 +808,6 @@ class Log(Base):
         # Record.
         self.log(*messages, level=self.INFO, **params)
 
-
     def warning(
         self,
         *messages: Any,
@@ -857,7 +824,6 @@ class Log(Base):
 
         # Record.
         self.log(*messages, level=self.WARNING, **params)
-
 
     def error(
         self,
@@ -876,7 +842,6 @@ class Log(Base):
         # Record.
         self.log(*messages, level=self.ERROR, **params)
 
-
     def critical(
         self,
         *messages: Any,
@@ -894,7 +859,6 @@ class Log(Base):
         # Record.
         self.log(*messages, level=self.CRITICAL, **params)
 
-
     def stop(self) -> None:
         """
         Stop started record.
@@ -905,7 +869,6 @@ class Log(Base):
 
         # Update status.
         self.stopped = True
-
 
     def start(self) -> None:
         """
@@ -918,7 +881,6 @@ class Log(Base):
         # Update status.
         self.stopped = False
 
-
     def __del__(self) -> None:
         """
         Delete handle.
@@ -930,16 +892,13 @@ class Log(Base):
         # Delete handler.
         self.clear_handler()
 
-
     __call__ = log
-
 
 class Mark(Base):
     """
     Mark object type.
     Based on object hash value.
     """
-
 
     def __init__(self) -> None:
         """
@@ -948,7 +907,6 @@ class Mark(Base):
 
         # Build.
         self.data: dict[Hashable, set[int]] = {}
-
 
     def mark(self, obj: Any, group: Hashable | Null.Type = Null) -> int:
         """
@@ -973,7 +931,6 @@ class Mark(Base):
 
         return obj_id
 
-
     def remove(self, obj: Any, group: Hashable | Null.Type = Null) -> None:
         """
         Whether marked.
@@ -995,7 +952,6 @@ class Mark(Base):
         # Remove.
         group_set.remove(obj_id)
 
-
     def remove_group(self, group: Hashable) -> None:
         """
         Whether marked.
@@ -1011,7 +967,6 @@ class Mark(Base):
 
         # Remove.
         del self.data[group]
-
 
     def is_marked(self, obj: Any, group: Hashable | Null.Type = Null) -> bool:
         """
@@ -1035,7 +990,6 @@ class Mark(Base):
         result = obj_id in group_set
 
         return result
-
 
     __call__ = mark
 

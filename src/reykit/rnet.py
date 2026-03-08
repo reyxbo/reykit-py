@@ -8,7 +8,6 @@
 @Explain : Network methods.
 """
 
-
 from typing import Any, Literal, TypedDict, NotRequired, overload
 from collections.abc import Callable, Iterable
 from warnings import filterwarnings
@@ -38,7 +37,6 @@ from .rbase import Base, throw
 from .ros import File, get_md5
 from .rre import search, split, sub
 
-
 __all__ = (
     'join_url',
     'split_url',
@@ -53,7 +51,6 @@ __all__ = (
     'RequestCache'
 )
 
-
 RequestCacheParameters = TypedDict(
     'RequestCacheParameters',
     {
@@ -65,7 +62,6 @@ RequestCacheParameters = TypedDict(
         'judge': NotRequired[Callable[[Response], bool]]
     }
 )
-
 
 def join_url(*urls: Any, **params: dict) -> str:
     """
@@ -113,7 +109,6 @@ def join_url(*urls: Any, **params: dict) -> str:
 
     return url
 
-
 def split_url(url: str) -> tuple[str, dict[str, str]]:
     """
     Split URL and parameters.
@@ -143,7 +138,6 @@ def split_url(url: str) -> tuple[str, dict[str, str]]:
 
     return url, params
 
-
 def join_cookie(params: dict[str, str]) -> str:
     """
     Join parameters of Cookie.
@@ -166,7 +160,6 @@ def join_cookie(params: dict[str, str]) -> str:
     )
 
     return cookie
-
 
 def split_cookie(cookie: str) -> dict[str, str]:
     """
@@ -191,7 +184,6 @@ def split_cookie(cookie: str) -> dict[str, str]:
     }
 
     return params
-
 
 def get_content_type(file: str | bytes) -> str | None:
     """
@@ -225,7 +217,6 @@ def get_content_type(file: str | bytes) -> str | None:
 
     return file_type
 
-
 @overload
 def request(
     url: str,
@@ -241,7 +232,6 @@ def request(
     method: Literal['get', 'post', 'put', 'patch', 'delete', 'options', 'head'] | None = Literal['post'],
     check: bool | int | Iterable[int] = False
 ) -> Response: ...
-
 
 @overload
 def request(
@@ -414,7 +404,6 @@ def request(
 
     return response
 
-
 def get_response_file_name(response: Response, default_name: str | None = None) -> str:
     """
     Get file name from response.
@@ -458,7 +447,6 @@ def get_response_file_name(response: Response, default_name: str | None = None) 
 
     return file_name
 
-
 def download(url: str, path: str | None = None) -> str:
     """
     Download file from URL.
@@ -487,7 +475,6 @@ def download(url: str, path: str | None = None) -> str:
     file(response.content)
 
     return path
-
 
 def compute_stream_time(
     source: str | bytes | int,
@@ -526,7 +513,6 @@ def compute_stream_time(
 
     return seconds
 
-
 def listen_socket(
     host: str,
     port: str | int,
@@ -557,12 +543,10 @@ def listen_socket(
         data = socket_conn.recv(rece_size)
         handler(data)
 
-
 class RequestCache(Base):
     """
     Requests cache type.
     """
-
 
     def __init__(
         self,
@@ -599,7 +583,6 @@ class RequestCache(Base):
         self.methods = methods
         self.judge = judge
 
-
     @property
     def __start_params(self) -> RequestCacheParameters:
         """
@@ -633,7 +616,6 @@ class RequestCache(Base):
 
         return params
 
-
     def start(self) -> None:
         """
         Start cache.
@@ -642,7 +624,6 @@ class RequestCache(Base):
         # Start.
         requests_cache_install_cache(**self.__start_params)
 
-
     def stop(self) -> None:
         """
         Stop cache.
@@ -650,7 +631,6 @@ class RequestCache(Base):
 
         # Stop.
         requests_cache_uninstall_cache()
-
 
     @property
     def started(self) -> bool:
@@ -666,7 +646,6 @@ class RequestCache(Base):
         result = requests_cache_is_installed()
 
         return result
-
 
     def clear(self) -> None:
         """

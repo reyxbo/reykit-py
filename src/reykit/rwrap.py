@@ -8,7 +8,6 @@
 @Explain : Decorator methods.
 """
 
-
 from typing import Any, Literal, overload
 from collections.abc import Callable
 from io import IOBase, StringIO
@@ -24,7 +23,6 @@ from .rbase import T, catch_exc, get_arg_info
 from .rstdout import echo
 from .rtime import now, time_to, TimeMark
 
-
 __all__ = (
     'wrap_wrap',
     'wrap_runtime',
@@ -37,10 +35,8 @@ __all__ = (
     'wrap_redirect_stdout'
 )
 
-
 type DecoratedCallable = Callable
 type Decorator = Callable[..., DecoratedCallable]
-
 
 def wrap_wrap(decorator: Decorator | None = None) -> Decorator:
     """
@@ -79,7 +75,6 @@ def wrap_wrap(decorator: Decorator | None = None) -> Decorator:
     >>> func(*args, **kwargs)
     """
 
-
     # Decorate Decorator.
     @overload
     def _wrap(func: Callable, **wrap_kwargs: Any) -> DecoratedCallable: ...
@@ -110,7 +105,6 @@ def wrap_wrap(decorator: Decorator | None = None) -> Decorator:
         # No decorator parameter.
         else:
 
-
             @functools_wraps(func)
             def _func(*args: Any, **kwargs: Any) -> Any:
                 """
@@ -131,12 +125,9 @@ def wrap_wrap(decorator: Decorator | None = None) -> Decorator:
 
                 return result
 
-
             return _func
 
-
     return _wrap
-
 
 @overload
 def wrap_runtime(
@@ -219,7 +210,6 @@ def wrap_runtime(
 
     return result
 
-
 @overload
 def wrap_thread(
     func: Callable,
@@ -265,7 +255,6 @@ def wrap_thread(
     thread.start()
 
     return thread
-
 
 @overload
 def wrap_exc(
@@ -316,7 +305,6 @@ def wrap_exc(
 
     else:
         return result
-
 
 @overload
 def wrap_retry(
@@ -380,7 +368,6 @@ def wrap_retry(
     result = func(*args, **kwargs)
 
     return result
-
 
 @overload
 def wrap_dos_command(
@@ -503,10 +490,8 @@ def wrap_dos_command(
 
     return result
 
-
 # Cache decorator data.
 wrap_cache_data: dict[Callable, list[tuple[Any, Any, Any]]] = {}
-
 
 @overload
 def wrap_cache(
@@ -569,7 +554,6 @@ def wrap_cache(
         wrap_cache_data_func[cache_index] = data
 
     return result
-
 
 @overload
 def wrap_redirect_stdout(

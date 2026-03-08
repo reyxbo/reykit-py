@@ -8,7 +8,6 @@
 @Explain : Table methods.
 """
 
-
 from typing import Any, TypedDict, overload
 from collections.abc import Iterable, Mapping
 from os.path import abspath as os_abspath
@@ -21,24 +20,20 @@ from .ros import File
 from .rtext import to_text
 from .rtime import time_to
 
-
 __all__ = (
     'RowData',
     'TableData',
     'Table'
 )
 
-
 RowData = Iterable | Mapping
 TableData = Iterable[RowData]
 SheetSet = TypedDict('SheetsSet', {'name': str, 'index': int, 'fields': str | list[str]})
-
 
 class Table(Base):
     """
     Table type.
     """
-
 
     def __init__(self, data: TableData) -> None:
         """
@@ -51,7 +46,6 @@ class Table(Base):
 
         # Parameter.
         self.data = data
-
 
     def to_table(self) -> list[dict]:
         """
@@ -85,7 +79,6 @@ class Table(Base):
 
         return result
 
-
     def to_row(self, index: int = 0) -> dict | None:
         """
         Convert data as one row of table.
@@ -110,7 +103,6 @@ class Table(Base):
         row = table[index]
 
         return row
-
 
     @overload
     def to_dict(
@@ -184,7 +176,6 @@ class Table(Base):
 
         return data_dict
 
-
     def to_list(self, field: int | str = 0) -> list:
         """
         Convert data as list.
@@ -220,7 +211,6 @@ class Table(Base):
 
         return data_list
 
-
     def to_text(self, width: int | None = None) -> str:
         """
         Convert data to text.
@@ -243,7 +233,6 @@ class Table(Base):
 
         return text
 
-
     def to_json(self, compact: bool = True) -> str:
         """
         Convert data to JSON string.
@@ -264,7 +253,6 @@ class Table(Base):
         string = to_json(data, compact)
 
         return string
-
 
     def to_sql(self) -> str:
         """
@@ -309,7 +297,6 @@ class Table(Base):
 
         return data_sql
 
-
     def to_df(self) -> DataFrame:
         """
         Convert data to table of `DataFrame` object.
@@ -331,7 +318,6 @@ class Table(Base):
 
         return result
 
-
     def to_html(self) -> str:
         """
         Convert data to HTML string.
@@ -348,7 +334,6 @@ class Table(Base):
         result = data.to_html(col_space=50, index=False, justify='center')
 
         return result
-
 
     def to_csv(self, path: str = 'data.csv') -> str:
         """
@@ -376,7 +361,6 @@ class Table(Base):
         data.to_csv(file.path, header=header, index=False, mode='a')
 
         return file.path
-
 
     def to_excel(
         self,

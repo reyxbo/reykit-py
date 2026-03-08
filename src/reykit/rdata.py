@@ -8,7 +8,6 @@
 @Explain : Data methods.
 """
 
-
 from typing import Any, TypedDict, Literal, overload
 from collections import Counter, defaultdict as Defaultdict, ChainMap
 from collections.abc import Callable, Iterable, Generator, AsyncGenerator
@@ -20,7 +19,6 @@ from jwt.exceptions import InvalidTokenError
 from bcrypt import gensalt as bcrypt_gensalt, hashpw as bcrypt_hashpw, checkpw as bcrypt_checkpw
 
 from .rbase import T, KT, VT, Base, Null, throw, check_least_one, check_most_one, is_iterable
-
 
 __all__ = (
     'to_json',
@@ -39,9 +37,7 @@ __all__ = (
     'is_hash_bcrypt'
 )
 
-
 CountResult = TypedDict('CountResult', {'element': Any, 'number': int})
-
 
 def to_json(
     data: Any,
@@ -84,7 +80,6 @@ def to_json(
 
     return string
 
-
 def count(data: Iterable) -> list[CountResult]:
     """
     Group count data element value.
@@ -113,7 +108,6 @@ def count(data: Iterable) -> list[CountResult]:
     ]
 
     return result
-
 
 def flatten(data: Any, *, _flattern_data: list | None = None) -> list:
     """
@@ -155,7 +149,6 @@ def flatten(data: Any, *, _flattern_data: list | None = None) -> list:
         _flattern_data.append(data)
 
     return _flattern_data
-
 
 @overload
 def split(data: Iterable[T], share: int) -> list[list[T]]: ...
@@ -210,7 +203,6 @@ def split(data: Iterable[T], share: int | None = None, bin_size: int | None = No
 
     return _data
 
-
 def unique(data: Iterable[T]) -> list[T]:
     """
     De duplication of data.
@@ -231,7 +223,6 @@ def unique(data: Iterable[T]) -> list[T]:
     data_unique = list(set(data))
     data_unique.sort(key=data.index)
     return data_unique
-
 
 def in_arrs(ojb: Any, *arrs: Iterable, mode: Literal['or', 'and'] = 'or') -> bool:
     """
@@ -269,7 +260,6 @@ def in_arrs(ojb: Any, *arrs: Iterable, mode: Literal['or', 'and'] = 'or') -> boo
 
             return True
 
-
 def objs_in(arr: Iterable, *objs: Any, mode: Literal['or', 'and'] = 'or') -> bool:
     """
     Judge whether the multiple objects is in one array.
@@ -305,7 +295,6 @@ def objs_in(arr: Iterable, *objs: Any, mode: Literal['or', 'and'] = 'or') -> boo
                     return False
 
             return True
-
 
 @overload
 def chain(*iterables: dict[KT, VT]) -> ChainMap[KT, VT]: ...
@@ -343,7 +332,6 @@ def chain(*iterables: dict[KT, VT] | Iterable[T]) -> ChainMap[KT, VT] | IChain[T
 
     return data
 
-
 def default_dict(default: T | Null.Type = Null, data: dict[KT, VT] | None = None) -> Defaultdict[KT, VT | T]:
     """
     Set `dict` instance, default value when key does not exist.
@@ -378,7 +366,6 @@ def default_dict(default: T | Null.Type = Null, data: dict[KT, VT] | None = None
 
     return dict_set
 
-
 class FunctionGenerator(Base):
     """
     Function generator type.
@@ -392,7 +379,6 @@ class FunctionGenerator(Base):
     >>> list(fgenerator)
     [11, 12]
     """
-
 
     def __init__(
         self,
@@ -415,7 +401,6 @@ class FunctionGenerator(Base):
         self.args = args
         self.kwargs = kwargs
         self.params: list[tuple[tuple, dict]] = []
-
 
     def generator(self) -> Generator[Any, Any, None]:
         """
@@ -440,7 +425,6 @@ class FunctionGenerator(Base):
             # Return.
             yield result
 
-
     async def agenerator(self) -> AsyncGenerator[Any, Any]:
         """
         Asynchronous create generator.
@@ -463,7 +447,6 @@ class FunctionGenerator(Base):
 
             # Return.
             yield result
-
 
     def add(
         self,
@@ -496,9 +479,7 @@ class FunctionGenerator(Base):
         )
         self.params.append(item)
 
-
     __call__ = add
-
 
     def __next__(self) -> Any:
         """
@@ -515,7 +496,6 @@ class FunctionGenerator(Base):
 
         return result
 
-
     def __iter__(self) -> Generator[Any, Any, None]:
         """
         Iterating generator.
@@ -525,7 +505,6 @@ class FunctionGenerator(Base):
         generator = self.generator()
 
         return generator
-
 
     async def __anext__(self) -> Any:
         """
@@ -542,7 +521,6 @@ class FunctionGenerator(Base):
 
         return result
 
-
     async def __aiter__(self) -> AsyncGenerator[Any, Any]:
         """
         Asynchronous iterating generator.
@@ -552,7 +530,6 @@ class FunctionGenerator(Base):
         agenerator = await self.agenerator()
 
         return agenerator
-
 
 def encode_jwt(json: dict[str, Any], key: str | bytes) -> str:
     """
@@ -583,7 +560,6 @@ def encode_jwt(json: dict[str, Any], key: str | bytes) -> str:
 
     return token
 
-
 def decode_jwt(token: str | bytes, key: str| bytes) -> dict[str, Any] | None:
     """
     Decode JWT token to JSON data, based on `HS256`. When decode error, then return `None`.
@@ -609,7 +585,6 @@ def decode_jwt(token: str | bytes, key: str| bytes) -> dict[str, Any] | None:
 
     return json
 
-
 def hash_bcrypt(password: str | bytes) -> bytes:
     """
     Get hash password, based on algorithm `bcrypt`.
@@ -632,7 +607,6 @@ def hash_bcrypt(password: str | bytes) -> bytes:
     password_hash = bcrypt_hashpw(password, salt)
 
     return password_hash
-
 
 def is_hash_bcrypt(password: str | bytes, password_hash: str | bytes) -> bool:
     """

@@ -8,7 +8,6 @@
 @Explain : Regular expression methods.
 """
 
-
 from typing import Literal, overload
 from collections.abc import Callable
 from re import (
@@ -22,7 +21,6 @@ from re import (
 
 from .rdata import unique
 
-
 __all__ = (
     'search',
     'findall',
@@ -33,7 +31,6 @@ __all__ = (
     'sub_batch',
     'split_batch'
 )
-
 
 def search(
     pattern: str,
@@ -69,7 +66,6 @@ def search(
 
         return result
 
-
 def findall(
     pattern: str,
     text: str,
@@ -91,7 +87,6 @@ def findall(
     result = re_findall(pattern, text, RS)
 
     return result
-
 
 def sub(
     pattern: str,
@@ -124,7 +119,6 @@ def sub(
 
     return result
 
-
 def split(
     pattern: str,
     text: str,
@@ -151,7 +145,6 @@ def split(
     result = re_split(pattern, text, count, RS)
 
     return result
-
 
 @overload
 def search_batch(
@@ -203,7 +196,6 @@ def search_batch(
         result = [search(pattern, text) for pattern in patterns]
         return result
 
-
 def findall_batch(text: str, *patterns: str) -> str:
     """
     Batch regular find all text.
@@ -229,7 +221,6 @@ def findall_batch(text: str, *patterns: str) -> str:
     texts = unique(texts)
 
     return texts
-
 
 def sub_batch(text: str, *patterns: str | tuple[str, str | Callable[[RMatch], str]]) -> str:
     """
@@ -257,7 +248,6 @@ def sub_batch(text: str, *patterns: str | tuple[str, str | Callable[[RMatch], st
         text = sub(pattern, text, replace)
 
     return text
-
 
 def split_batch(text: str, *patterns: str) -> str:
     """
