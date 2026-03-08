@@ -42,6 +42,8 @@ from .rbase import Config, throw, get_varname
 __all__ = (
     'SystemConfig',
     'env',
+    'read_env',
+    'load_env',
     'add_env_path',
     'reset_env_path',
     'del_modules',
@@ -107,6 +109,59 @@ class SystemConfig(Config):
 
 
 env = os_environ
+
+
+def read_env(path: str) -> dict[str, str]:
+    """
+    Read environment variable file.
+
+    Parameters
+    ----------
+    path : File path.
+
+    Returns
+    -------
+    Environment variable file data.
+    """
+
+    from .ros import File
+
+    # Read.
+    file = File(path)
+    data = {}
+    for line in file.str.split('\n'):
+        line = line.strip()
+        if (
+            line.startswith('#')
+            or '=' not in line
+        ):
+            continue
+        key, value = line.split('=', 1)
+        data[key] = value.strip('"').strip("'")
+
+    return data
+
+
+def load_env(path: str) -> dict[str, str]:
+    """
+    Load environment variable file.
+
+    Parameters
+    ----------
+    path : File path.
+
+    Returns
+    -------
+    Environment variable file data.
+    """
+
+    # Read.
+    data = read_env(path)
+
+    # Load.
+    env.update(data)
+
+    return data
 
 
 def add_env_path(path: str) -> list[str]:
