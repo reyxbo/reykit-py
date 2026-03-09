@@ -22,6 +22,11 @@ from re import (
 from .rdata import unique
 
 __all__ = (
+    'PATTERN_EMAIL',
+    'PATTERN_PHONE',
+    'PATTERN_EMAIL',
+    'PATTERN_PHONE',
+    'PATTERN_CN'
     'search',
     'findall',
     'sub',
@@ -31,6 +36,12 @@ __all__ = (
     'sub_batch',
     'split_batch'
 )
+
+PATTERN_IP = r'^((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$'
+PATTERN_URL = r'^https?:\/\/[^\s/$.?#].[^\s]*$'
+PATTERN_EMAIL = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+PATTERN_PHONE = r'^1[3-9]\d{9}$'
+PATTERN_CN = r'^[\u4e00-\u9fa5]+$'
 
 def search(
     pattern: str,
