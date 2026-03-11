@@ -281,7 +281,7 @@ def throw(
                     for name, value in names_values
                 ]
             )
-        text += ' %s.' % text_value
+        text = ' ' + text_value
 
     # Throw exception.
     exception = exception(text)

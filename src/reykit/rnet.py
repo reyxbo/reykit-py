@@ -63,14 +63,17 @@ RequestCacheParameters = TypedDict(
     }
 )
 
-def join_url(*urls: Any, **params: dict) -> str:
+def join_url(*paths: str | int | None, **params: dict[str, str | float | bool]) -> str:
     """
     Join URL and parameters.
 
     Parameters
     ----------
-    urls : URL parts.
+    paths : URL paths.
+        - `None`: Ignore.
     params : URL parameters.
+        - `Value is None`: Ignore.
+        - `Value is bool`: `True` -> `true`, `False` -> `false`.
 
     Returns
     -------
@@ -78,15 +81,16 @@ def join_url(*urls: Any, **params: dict) -> str:
     """
 
     # Parameter.
-    if len(urls) == 0:
-        throw(ValueError, urls)
-    urls = [
+    if len(paths) == 0:
+        throw(ValueError, paths)
+    paths = [
         str(url)
-        for url in urls
+        for url in paths
+        if url is not None
     ]
 
     # Join URL.
-    url: str = '/'.join(urls)
+    url: str = '/'.join(paths)
     url = url.replace('\\', '/')
     pattern = '(?<!:)//+'
     url = sub(pattern, url, '/')
@@ -95,10 +99,18 @@ def join_url(*urls: Any, **params: dict) -> str:
 
     # Join parameter.
     if params != {}:
+        handle_value = lambda value: (
+            'true'
+            if value is True
+            else 'false'
+            if value is False
+            else str(value)
+        )
         params_str = '&'.join(
             [
-                f'{key}={urllib_quote(str(value))}'
+                f'{key}={handle_value(value)}'
                 for key, value in params.items()
+                if value is not None
             ]
         )
         if '?' not in url:
