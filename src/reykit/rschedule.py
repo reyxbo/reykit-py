@@ -187,7 +187,7 @@ class Schedule(Base):
         ]
 
         # Build.
-        self.db_engine.build.build(tables=tables, views_stats=views_stats, skip=True)
+        self.db_engine.build(tables=tables, views_stats=views_stats, skip=True)
 
         # ## Error.
         self.db_engine.error.build_db()

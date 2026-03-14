@@ -12,6 +12,7 @@ from smtplib import SMTP
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
+from reydb import rorm, DatabaseEngine
 
 from .rbase import Base, throw
 from .rdata import unique
@@ -21,15 +22,35 @@ __all__ = (
     'Email',
 )
 
+class DatabaseORMTableEmailSend(rorm.Table):
+    """
+    Database `email_send` table ORM model.
+    """
+
+    __name__ = 'email_send'
+    __comment__ = 'Email send record table.'
+    id: int = rorm.Field(key_auto=True, comment='ID.')
+    create_time: rorm.Datetime = rorm.Field(field_default=':time', not_null=True, index_n=True, comment='Record create time.')
+    from_: str = rorm.Field(name='from', not_null=True, comment='From email addresse.')
+    to: list[str] = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), not_null=True, comment='To email addresses.')
+    show_from: str = rorm.Field(comment='Show from email addresse.')
+    show_to: list[str] = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), comment='Show to email addresses.')
+    show_cc: list[str] = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), comment='Show carbon copy email addresses.')
+    title: str = rorm.Field(comment='Email title.')
+    text: str = rorm.Field(rorm.types.TEXT, comment='Email text.')
+    attachment: list[str] = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), comment='Email attachment names.')
+
 class Email(Base):
     """
     Email type.
+    Can create database used "self.build_db" method.
     """
 
     def __init__(
         self,
         username: str,
-        password: str
+        password: str,
+        db_engine: DatabaseEngine | None = None,
     ) -> None:
         """
         Build instance attributes.
@@ -38,17 +59,19 @@ class Email(Base):
         ----------
         username : Email username.
         password : Email password.
+        db_engine : Database engine, insert request record to table.
         """
-
-        # Parameter.
-        host, port = self.get_server_address(username)
 
         # Set attribute.
         self.username = username
         self.password = password
-        self.host = host
-        self.port = port
-        self.smtp = SMTP(host, port)
+        self.db_engine = db_engine
+        address = self.get_server_address(self.username)
+        self.smtp = SMTP(*address)
+
+        ## Build Database.
+        if self.db_engine is not None:
+            self.build_db()
 
     def get_server_address(
         self,
@@ -254,6 +277,20 @@ class Email(Base):
             email
         )
 
+        # Database.
+        if self.db_engine is not None:
+            data = {
+                'from': self.username,
+                'to': tuple(to),
+                'show_from': show_from,
+                'show_to': tuple(show_to),
+                'show_cc': tuple(show_cc),
+                'title': title,
+                'text': text,
+                'attachment': tuple(attachment.keys())
+            }
+            self.db_engine.execute.insert('email_send', data)
+
     __call__ = send_email
 
     def __del__(self) -> None:
@@ -263,3 +300,64 @@ class Email(Base):
 
         # Quit.
         self.smtp.quit()
+
+    def build_db(self) -> None:
+        """
+        Check and build database tables.
+        """
+
+        # Check.
+        if self.db_engine is None:
+            throw(ValueError, self.db_engine)
+
+        # Parameter.
+
+        ## Table.
+        tables = [DatabaseORMTableEmailSend]
+
+        ## View stats.
+        views_stats = [
+            {
+                'table': 'stats_email_send',
+                'items': [
+                    {
+                        'name': 'count',
+                        'select': (
+                            'SELECT COUNT(1)\n'
+                            'FROM "email_send"'
+                        ),
+                        'comment': 'Create count.'
+                    },
+                    {
+                        'name': 'past_day_count',
+                        'select': (
+                            'SELECT COUNT(1)\n'
+                            'FROM "email_send"'
+                            'WHERE DATE_PART(\'day\', NOW() - "create_time") = 0'
+                        ),
+                        'comment': 'Create count in the past day.'
+                    },
+                    {
+                        'name': 'past_week_count',
+                        'select': (
+                            'SELECT COUNT(1)\n'
+                            'FROM "email_send"'
+                            'WHERE DATE_PART(\'day\', NOW() - "create_time") <= 6'
+                        ),
+                        'comment': 'Create count in the past week.'
+                    },
+                    {
+                        'name': 'past_month_count',
+                        'select': (
+                            'SELECT COUNT(1)\n'
+                            'FROM "email_send"'
+                            'WHERE DATE_PART(\'day\', NOW() - "create_time") <= 29'
+                        ),
+                        'comment': 'Create count in the past month.'
+                    }
+                ]
+            }
+        ]
+
+        # Build.
+        self.db_engine.build(tables=tables, views_stats=views_stats, skip=True)

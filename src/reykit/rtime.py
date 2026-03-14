@@ -27,7 +27,6 @@ from .rbase import T, Base, throw
 from .rnum import digits
 from .rrand import randn
 from .rre import search
-from .rstdout import echo
 
 __all__ = (
     'now',

@@ -302,7 +302,7 @@ def randi(
 
 def randchar(
     length: int = 32,
-    punctuation: bool = True
+    style: Literal['d', 'l', 'p', 'dl', 'dp', 'lp', 'dlp'] = 'dlp'
 ) -> str:
     """
     Generate random characters.
@@ -310,7 +310,14 @@ def randchar(
     Parameters
     ----------
     length : Character length.
-    punctuation : Whether contain punctuation.
+    style : Character style.
+        - `Literal['d']`: Use digits.
+        - `Literal['l']`: Use letters.
+        - `Literal['p']`: Use punctuation.
+        - `Literal['dl']`: Use digits and letters.
+        - `Literal['dp']`: Use digits and punctuation.
+        - `Literal['lp']`: Use letters and punctuation.
+        - `Literal['dlp']`: Use digits and letters and punctuation.
 
     Returns
     -------
@@ -318,9 +325,21 @@ def randchar(
     """
 
     # Parameter.
-    char_range = string_digits + string_ascii_letters
-    if punctuation:
-        char_range += string_punctuation
+    match style:
+        case 'd':
+            char_range = string_digits
+        case 'l':
+            char_range = string_ascii_letters
+        case 'p':
+            char_range = string_punctuation
+        case 'dl':
+            char_range = string_digits + string_ascii_letters
+        case 'dp':
+            char_range = string_digits + string_punctuation
+        case 'lp':
+            char_range = string_ascii_letters + string_punctuation
+        case 'dlp':
+            char_range = string_digits + string_ascii_letters + string_punctuation
 
     # Generate.
     char_list = randi(char_range, length, False)
