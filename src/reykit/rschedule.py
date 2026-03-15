@@ -49,11 +49,11 @@ class DatabaseORMTableSchedule(rorm.Table):
     __name__ = 'schedule'
     __comment__ = 'Schedule execute record table.'
     create_time: rorm.Datetime = rorm.Field(field_default=':time', not_null=True, index_n=True, comment='Record create time.')
-    update_time: rorm.Datetime = rorm.Field(field_default=':time', arg_default=now, index_n=True, comment='Record update time.')
+    update_time: rorm.Datetime | None = rorm.Field(field_default=':time', arg_default=now, index_n=True, comment='Record update time.')
     id: int = rorm.Field(key_auto=True, comment='ID.')
     status: str = rorm.Field(rorm.ENUM(ScheduleStatusEnum), field_default=ScheduleStatusEnum.START, not_null=True, comment='Schedule status.')
     task: str = rorm.Field(rorm.types.VARCHAR(100), not_null=True, comment='Schedule task function name.')
-    note: str = rorm.Field(rorm.types.VARCHAR(500), comment='Schedule note.')
+    note: str | None = rorm.Field(rorm.types.VARCHAR(500), comment='Schedule note.')
 
 class Schedule(Base):
     """

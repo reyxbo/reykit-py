@@ -33,12 +33,12 @@ class DatabaseORMTableEmailSend(rorm.Table):
     create_time: rorm.Datetime = rorm.Field(field_default=':time', not_null=True, index_n=True, comment='Record create time.')
     from_: str = rorm.Field(name='from', not_null=True, comment='From email addresse.')
     to: list[str] = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), not_null=True, comment='To email addresses.')
-    show_from: str = rorm.Field(comment='Show from email addresse.')
-    show_to: list[str] = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), comment='Show to email addresses.')
-    show_cc: list[str] = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), comment='Show carbon copy email addresses.')
-    title: str = rorm.Field(comment='Email title.')
-    text: str = rorm.Field(rorm.types.TEXT, comment='Email text.')
-    attachment: list[str] = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), comment='Email attachment names.')
+    show_from: str | None = rorm.Field(comment='Show from email addresse.')
+    show_to: list[str] | None = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), comment='Show to email addresses.')
+    show_cc: list[str] | None = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), comment='Show carbon copy email addresses.')
+    title: str | None = rorm.Field(comment='Email title.')
+    text: str | None = rorm.Field(rorm.types.TEXT, comment='Email text.')
+    attachment: list[str] | None = rorm.Field(rorm.types.ARRAY(rorm.types.VARCHAR(255)), comment='Email attachment names.')
 
 class Email(Base):
     """
