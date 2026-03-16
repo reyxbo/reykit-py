@@ -66,8 +66,6 @@ class Email(Base):
         self.username = username
         self.password = password
         self.db_engine = db_engine
-        address = self.get_server_address(self.username)
-        self.smtp = SMTP(*address)
 
         ## Build Database.
         if self.db_engine is not None:
@@ -105,13 +103,15 @@ class Email(Base):
         Instance.
         """
 
-        # Login.
-        response = self.smtp.login(self.username, self.password)
+        # Get.
+        address = self.get_server_address(self.username)
+        smtp = SMTP(*address)
+        response = smtp.login(self.username, self.password)
         code = response[0]
         if code != 235:
             throw(ConnectionError, response)
 
-        return self.smtp
+        return smtp
 
     def create_email(
         self,
@@ -129,6 +129,8 @@ class Email(Base):
         ----------
         title : Email title.
         text : Email text.
+            - `Start with '<!DOCTYPE html>'`: Sub type is `html`.
+            - `Other`: Sub type is `plain`.
         attachment : Email attachments dictionary.
             - `Key`: File name.
             - `Value`: File bytes data.
@@ -151,10 +153,14 @@ class Email(Base):
         ## Title.
         if title is not None:
             mimes['subject'] = title
-        
+
         ## Text.
         if text is not None:
-            mime_text = MIMEText(text)
+            if text.lstrip().startswith('<!DOCTYPE html>'):
+                subtype = 'html'
+            else:
+                subtype = 'plain'
+            mime_text = MIMEText(text, subtype)
             mimes.attach(mime_text)
 
         ## Attachment.
@@ -201,6 +207,8 @@ class Email(Base):
             - `list[str]`: Email addresses list.
         title : Email title.
         text : Email text.
+            - `Start with '<!DOCTYPE html>'`: Sub type is `html`.
+            - `Other`: Sub type is `plain`.
         attachment : Email attachments dictionary.
             - `Key`: File name.
             - `Value`: File bytes data source.

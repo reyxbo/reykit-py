@@ -8,8 +8,7 @@
 @Explain : Base methods.
 """
 
-from typing import Any, Literal, Callable, Self, TypeVar, Type, NoReturn, overload, final
-from types import CoroutineType
+from typing import Any, Literal, Callable, Self, TypeVar, NoReturn, overload, final
 from collections.abc import Callable, Iterable, Container, Mapping
 from sys import exc_info as sys_exc_info
 from os.path import exists as os_exists
@@ -29,9 +28,6 @@ __all__ = (
     'KT',
     'VT',
     'CallableT',
-    'CallableSimple',
-    'CoroutineFunction',
-    'CoroutineFunctionSimple',
     'Base',
     'StaticMeta',
     'ConfigMeta',
@@ -65,16 +61,12 @@ __all__ = (
 )
 
 # Generic.
-T = TypeVar('T') # Any.
-U = TypeVar('U') # Any.
-V = TypeVar('V') # Any.
-KT = TypeVar('KT') # Dictionary key.
-VT = TypeVar('VT') # Dictionary value.
-CallableT = TypeVar('CallableT', bound=Callable) # Callable.
-
-type CallableSimple = Callable[[], Any]
-type CoroutineFunction = Callable[..., CoroutineType]
-type CoroutineFunctionSimple = Callable[[], CoroutineType]
+T = TypeVar('T')
+U = TypeVar('U')
+V = TypeVar('V')
+KT = TypeVar('KT')
+VT = TypeVar('VT')
+CallableT = TypeVar('CallableT', bound=Callable)
 
 class Base(object):
     """
