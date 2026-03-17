@@ -1855,7 +1855,10 @@ class FileStore(Base):
         """
 
         # Exist.
-        if self.folder:
+        if (
+            self.folder
+            and self.folder.paths() != []
+        ):
             return
 
         # Parameter.
