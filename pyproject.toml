@@ -1,6 +1,6 @@
 [project]
 name = "reykit"
-version = "1.2.48"
+version = "1.2.49"
 description = "Kit method set."
 readme = "README.md"
 requires-python = ">=3.12"

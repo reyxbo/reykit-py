@@ -25,11 +25,11 @@ from .rbase import Base, throw
 
 __all__ = (
     'ScheduleStatusEnum',
-    'DatabaseORMTableSchedule',
+    'ORMTableSchedule',
     'Schedule'
 )
 
-class ScheduleStatusEnum(StrEnum):
+class ScheduleStatusEnum(Base, StrEnum):
     """
     Schedule status enumeration type.
     """
@@ -41,9 +41,9 @@ class ScheduleStatusEnum(StrEnum):
     FAIL = 'fail'
     'Schedule failed.'
 
-class DatabaseORMTableSchedule(rorm.Table):
+class ORMTableSchedule(Base, rorm.Table):
     """
-    Database "schedule" table ORM model.
+    `schedule` table ORM model.
     """
 
     __name__ = 'schedule'
@@ -51,7 +51,7 @@ class DatabaseORMTableSchedule(rorm.Table):
     create_time: rorm.Datetime = rorm.Field(field_default=':time', not_null=True, index_n=True, comment='Record create time.')
     update_time: rorm.Datetime | None = rorm.Field(field_default=':time', arg_default=now, index_n=True, comment='Record update time.')
     id: int = rorm.Field(key_auto=True, comment='ID.')
-    status: str = rorm.Field(rorm.ENUM(ScheduleStatusEnum), field_default=ScheduleStatusEnum.START, not_null=True, comment='Schedule status.')
+    status: ScheduleStatusEnum = rorm.Field(rorm.ENUM(ScheduleStatusEnum), field_default=ScheduleStatusEnum.START, not_null=True, comment='Schedule status.')
     task: str = rorm.Field(rorm.types.VARCHAR(100), not_null=True, comment='Schedule task function name.')
     note: str | None = rorm.Field(rorm.types.VARCHAR(500), comment='Schedule note.')
 
@@ -124,7 +124,7 @@ class Schedule(Base):
         # Parameter.
 
         ## Table.
-        tables = [DatabaseORMTableSchedule]
+        tables = [ORMTableSchedule]
 
         ## View stats.
         views_stats = [

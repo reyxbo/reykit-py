@@ -22,9 +22,9 @@ __all__ = (
     'Email',
 )
 
-class DatabaseORMTableEmailSend(rorm.Table):
+class ORMTableEmailSend(Base, rorm.Table):
     """
-    Database `email_send` table ORM model.
+    `email_send` table ORM model.
     """
 
     __name__ = 'email_send'
@@ -321,7 +321,7 @@ class Email(Base):
         # Parameter.
 
         ## Table.
-        tables = [DatabaseORMTableEmailSend]
+        tables = [ORMTableEmailSend]
 
         ## View stats.
         views_stats = [
