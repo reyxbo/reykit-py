@@ -301,14 +301,6 @@ class Email(Base):
 
     __call__ = send_email
 
-    def __del__(self) -> None:
-        """
-        Delete instance.
-        """
-
-        # Quit.
-        self.smtp.quit()
-
     def build_db(self) -> None:
         """
         Check and build database tables.
