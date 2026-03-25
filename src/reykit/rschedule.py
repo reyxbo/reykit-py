@@ -41,7 +41,7 @@ class ScheduleStatusEnum(Base, StrEnum):
     FAIL = 'fail'
     'Schedule failed.'
 
-class ORMTableSchedule(Base, rorm.Table):
+class ORMTableSchedule(rorm.Table):
     """
     `schedule` table ORM model.
     """

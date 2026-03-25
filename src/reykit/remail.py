@@ -22,7 +22,7 @@ __all__ = (
     'Email',
 )
 
-class ORMTableEmailSend(Base, rorm.Table):
+class ORMTableEmailSend(rorm.Table):
     """
     `email_send` table ORM model.
     """
