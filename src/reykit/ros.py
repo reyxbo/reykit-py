@@ -1979,6 +1979,33 @@ class FileStore(Base):
 
         return path
 
+    def delete(self, md5: str, name: str | None = None) -> bool:
+        """
+        Delete file from cache directory.
+
+        Parameters
+        ----------
+        md5 : File MD5 value.
+        name : File name.
+            - `None`: Use MD5 value.
+
+        Returns
+        -------
+        Whether to file exists and delete it.
+        """
+
+        # Index.
+        path = self.index(md5, name)
+
+        # Not exists.
+        if path is None:
+            return False
+
+        # Delete.
+        file = File(path)
+        file.remove()
+        return True
+
     def download(self, url: str, name: str | None = None, **request_params: Any) -> str:
         """
         Download file from URL.
