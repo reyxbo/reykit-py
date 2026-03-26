@@ -8,7 +8,7 @@
 @Explain : Decorator methods.
 """
 
-from typing import Any, Literal, overload
+from typing import Any, Literal, overload, NoReturn
 from collections.abc import Callable
 from io import IOBase, StringIO
 from traceback import StackSummary
@@ -19,12 +19,13 @@ from threading import Thread
 from argparse import ArgumentParser
 from contextlib import redirect_stdout
 
-from .rbase import T, catch_exc, get_arg_info
+from .rbase import T, throw, catch_exc, get_arg_info
 from .rstdout import echo
 from .rtime import now, time_to, TimeMark
 
 __all__ = (
     'wrap_wrap',
+    'wrap_disabled',
     'wrap_runtime',
     'wrap_thread',
     'wrap_exc',
@@ -128,6 +129,33 @@ def wrap_wrap(decorator: Decorator | None = None) -> Decorator:
             return _func
 
     return _wrap
+
+@overload
+def wrap_disabled(
+    _: Callable[..., T],
+    *,
+    text: str
+) -> NoReturn: ...
+
+@wrap_wrap
+def wrap_disabled(
+    _: Callable[..., T],
+    *,
+    text: str
+) -> NoReturn:
+    """
+    Decorator, disable function, executing will throw exception.
+
+    Parameters
+    ----------
+    text : Exception text.
+    """
+
+    # Parameter.
+    text = text or 'this function is disabled'
+
+    # Throw exception.
+    throw(AssertionError, text=text)
 
 @overload
 def wrap_runtime(
