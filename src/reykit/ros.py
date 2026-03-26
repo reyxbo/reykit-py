@@ -1833,22 +1833,24 @@ class FileStore(Base):
     File Store type.
     """
 
-    def __init__(self, path: str = 'file') -> None:
+    def __init__(self, path: str = 'file', make_all_dir: bool = False) -> None:
         """
         Build instance attributes.
 
         Parameters
         ----------
-        path : Root directory path.
+        path : Root directory path.\
+        make_all_dir : Whether to pre make all directories.
         """
 
         # Set attribute.
         self.folder = Folder(path)
 
         # Make directory.
-        self.__make_dir()
+        if make_all_dir:
+            self.make_all_dir()
 
-    def __make_dir(self) -> None:
+    def make_all_dir(self) -> None:
         """
         Make cache directory and subdirectories.
         When root directory exists, then not make.
