@@ -132,16 +132,23 @@ def wrap_wrap(decorator: Decorator | None = None) -> Decorator:
 
 @overload
 def wrap_disabled(
-    _: Callable[..., T],
+    func: Callable[..., T],
     *,
-    text: str
+    text: str = 'this function is disabled'
 ) -> NoReturn: ...
+
+@overload
+def wrap_disabled(
+    *,
+    text: str = 'this function is disabled'
+) -> Callable[[Callable], NoReturn]: ...
 
 @wrap_wrap
 def wrap_disabled(
-    _: Callable[..., T],
-    *,
-    text: str
+    func: Callable[..., T],
+    args: Any,
+    kwargs: Any,
+    text: str = 'this function is disabled'
 ) -> NoReturn:
     """
     Decorator, disable function, executing will throw exception.
@@ -150,9 +157,6 @@ def wrap_disabled(
     ----------
     text : Exception text.
     """
-
-    # Parameter.
-    text = text or 'this function is disabled'
 
     # Throw exception.
     throw(AssertionError, text=text)
@@ -241,6 +245,7 @@ def wrap_runtime(
 @overload
 def wrap_thread(
     func: Callable,
+    *,
     daemon: bool = True
 ) -> Callable[..., Thread]: ...
 
@@ -287,6 +292,7 @@ def wrap_thread(
 @overload
 def wrap_exc(
     func: Callable[..., T],
+    *,
     handler: Callable[[str, BaseException, StackSummary], Any],
     exception: BaseException | tuple[BaseException, ...] | None = BaseException
 ) -> Callable[..., T | None]: ...
@@ -337,6 +343,7 @@ def wrap_exc(
 @overload
 def wrap_retry(
     func: Callable[..., T],
+    *,
     total: int = 1,
     handler: Callable[[tuple[str, BaseException, StackSummary]], Any] | None = None,
     exception: BaseException | tuple[BaseException, ...] = BaseException
@@ -524,6 +531,7 @@ wrap_cache_data: dict[Callable, list[tuple[Any, Any, Any]]] = {}
 @overload
 def wrap_cache(
     func: Callable[..., T],
+    *,
     overwrite: bool = False
 ) -> Callable[..., T]: ...
 
