@@ -11,7 +11,7 @@
 from typing import Any, TypedDict, overload
 from collections.abc import Iterable, Mapping
 from os.path import abspath as os_abspath
-from sqlalchemy.engine.cursor import CursorResult, Row as CursorRow
+from sqlalchemy.engine.cursor import Result as SqlalchemyResult, Row as SqlalchemyRow
 from pandas import DataFrame, Series, ExcelWriter
 
 from .rbase import Base, throw
@@ -60,9 +60,9 @@ class Table(Base):
         match self.data:
             case Mapping():
                 result = [dict(self.data)]
-            case CursorRow():
+            case SqlalchemyRow():
                 result = [dict(self.data._mapping)]
-            case CursorResult():
+            case SqlalchemyResult():
                 result = [
                     dict(row)
                     for row in self.data.mappings()

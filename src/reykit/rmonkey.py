@@ -48,7 +48,7 @@ def monkey_sqlalchemy_result_more_fetch():
 
     # Import.
     from typing import Self
-    from sqlalchemy import CursorResult, ScalarResult
+    from sqlalchemy import Result as BaseResult, CursorResult, ChunkedIteratorResult
     from pandas import DataFrame, NA, concat
     from .rbase import Base
     from .rstdout import echo
@@ -160,10 +160,25 @@ def monkey_sqlalchemy_result_more_fetch():
     CursorResult.show = method_show
     CursorResult.exist = method_exist
     CursorResult.empty = method_empty
+    ChunkedIteratorResult.data = method_data
+    ChunkedIteratorResult.to_table = Table.to_table
+    ChunkedIteratorResult.to_row = Table.to_row
+    ChunkedIteratorResult.to_dict = Table.to_dict
+    ChunkedIteratorResult.to_list = Table.to_list
+    ChunkedIteratorResult.to_text = Table.to_text
+    ChunkedIteratorResult.to_json = Table.to_json
+    ChunkedIteratorResult.to_sql = Table.to_sql
+    ChunkedIteratorResult.to_df = Table.to_df
+    ChunkedIteratorResult.to_html = Table.to_html
+    ChunkedIteratorResult.to_csv = Table.to_csv
+    ChunkedIteratorResult.to_excel = Table.to_excel
+    ChunkedIteratorResult.show = method_show
+    ChunkedIteratorResult.exist = method_exist
+    ChunkedIteratorResult.empty = method_empty
 
-    class Result(Base, CursorResult):
+    class Result(Base, BaseResult):
         """
-        Update based on `CursorResult` object, for annotation return value.
+        Update based on `BaseResult` object, for annotation return value.
         """
 
         # Inherit document.
