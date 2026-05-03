@@ -26,7 +26,7 @@ __all__ = (
     'PATTERN_PHONE',
     'PATTERN_EMAIL',
     'PATTERN_PHONE',
-    'PATTERN_CN'
+    'PATTERN_CN',
     'search',
     'findall',
     'sub',
