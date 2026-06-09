@@ -16,8 +16,12 @@ __all__ = (
     'is_int',
     'digits',
     'to_number',
-    'number_ch'
+    'number_ch',
+    'encode_base62',
+    'decode_base62'
 )
+
+BASE62_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
 def is_int(number: int | float) -> bool:
     """
@@ -176,3 +180,45 @@ def number_ch(number: int) -> str:
         number_str = number_str[:-1]
 
     return number_str
+
+def encode_base62(num: int) -> str:
+    """
+    Encode number to string of `base62` format.
+
+    Parameters
+    ----------
+    num : Number, range is `[0,+∞)`.
+
+    Returns
+    -------
+    Base62 code.
+    """
+
+    # Check.
+    if num < 0:
+        throw(ValueError, num)
+
+    # Encode.
+    chars: list[str] = []
+    while num > 0:
+        num, remainder = divmod(num, 62)
+        chars.append(BASE62_ALPHABET[remainder])
+    code = ''.join(chars)
+
+    return code
+
+def decode_base62(code: str) -> int:
+    """
+    Decode string of `base62` format to number.
+    """
+
+    # Decode.
+    result = 0
+    for char in code:
+        try:
+            value = BASE62_ALPHABET.index(char)
+        except IndexError:
+            throw(ValueError, code)
+        result = result * 62 + value
+
+    return result
