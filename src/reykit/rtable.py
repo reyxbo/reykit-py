@@ -27,7 +27,7 @@ __all__ = (
 )
 
 RowData = Iterable | Mapping
-TableData = Iterable[RowData]
+TableData = Iterable[RowData] | RowData
 SheetSet = TypedDict('SheetsSet', {'name': str, 'index': int, 'fields': str | list[str]})
 
 class Table(Base):
