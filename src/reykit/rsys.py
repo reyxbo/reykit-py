@@ -10,7 +10,7 @@
 
 from typing import Any, TypedDict, Literal, overload
 from collections.abc import Iterable, Sequence
-from sys import path as sys_path, modules as sys_modules
+from sys import path as sys_path, modules as sys_modules, maxsize as sys_maxsize
 from os import environ as os_environ, getpid as os_getpid
 from os.path import abspath as os_abspath
 from psutil import (
@@ -60,7 +60,8 @@ __all__ = (
     'open_browser',
     'popup_message',
     'popup_ask',
-    'popup_select'
+    'popup_select',
+    'get_sys_bits'
 )
 
 LoginUsers = TypedDict('LoginUsers', {'time': datetime, 'name': str, 'host': str})
@@ -1022,3 +1023,18 @@ def popup_select(
     path = path or None
 
     return path
+
+def get_sys_bits() -> Literal[32, 64]:
+    """
+    Get number of bits in the system.
+
+    Returns
+    -------
+    Number of bits in the system.
+    """
+
+    # Judge.
+    if sys_maxsize == 2147483647:
+        return 32
+    elif sys_maxsize == 9223372036854775807:
+        return 64
