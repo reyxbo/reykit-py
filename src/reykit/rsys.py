@@ -24,7 +24,6 @@ from psutil import (
     pids as psutil_pids,
     net_connections as psutil_net_connections,
     users as psutil_users,
-    net_connections as psutil_net_connections,
     process_iter as psutil_process_iter,
     pid_exists as psutil_pid_exists,
     Process

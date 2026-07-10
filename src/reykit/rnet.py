@@ -10,6 +10,7 @@
 
 from typing import Any, Literal, TypedDict, NotRequired, overload
 from collections.abc import Callable, Iterable
+from traceback import print_exc
 from warnings import filterwarnings
 from os.path import abspath as os_abspath, isfile as os_isfile
 from socket import socket as Socket
@@ -37,7 +38,6 @@ from .rbase import Base, throw
 from .rdata import to_json
 from .ros import File, get_md5
 from .rre import search, split, sub
-from .rwrap import wrap_exc
 
 __all__ = (
     'join_url',
@@ -610,12 +610,12 @@ def listen_socket(
 
                     ### Decode.
                     if auto_decode:
-                        wrapped_json_loads = wrap_exc(
-                            json_loads,
-                            handler=lambda exc_text, *_: print(exc_text),
-                            exception=JSONDecodeError
-                        )
-                        data = wrapped_json_loads(data.decode('utf-8'))
+                        try:
+                            data = json_loads(data.decode('utf-8'))
+                        except JSONDecodeError:
+                            print_exc()
+                            continue
+
                     handler(data)
 
 def send_socket(
