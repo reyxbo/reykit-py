@@ -49,6 +49,7 @@ __all__ = (
     'get_response_file_name',
     'download',
     'compute_stream_time',
+    'is_socket_listening',
     'listen_socket',
     'send_socket',
     'RequestCache'
@@ -527,6 +528,35 @@ def compute_stream_time(
     seconds = file_size / 125_000 / bandwidth
 
     return seconds
+
+def is_socket_listening(
+    host: str,
+    port: str | int
+) -> bool:
+    """
+    Is the socket listening.
+
+    Parameters
+    ----------
+    host : Socket host.
+    port : Socket port.
+
+    Returns
+    -------
+    Judgement result.
+    """
+
+    # Parameter.
+    port = int(port)
+
+    # Judge.
+    try:
+        with Socket() as socket:
+            socket.settimeout(1)
+            socket.connect((host, port))
+            return True
+    except OSError:
+        return False
 
 @overload
 def listen_socket(
