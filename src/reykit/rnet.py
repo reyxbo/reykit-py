@@ -12,7 +12,7 @@ from typing import Any, Literal, TypedDict, NotRequired, overload
 from collections.abc import Callable, Iterable
 from warnings import filterwarnings
 from os.path import abspath as os_abspath, isfile as os_isfile
-from socket import socket as  Socket
+from socket import socket as Socket
 from urllib.parse import (
     urlsplit as urllib_urlsplit,
     unquote as urllib_unquote
