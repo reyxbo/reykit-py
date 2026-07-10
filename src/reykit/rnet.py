@@ -552,7 +552,7 @@ def is_socket_listening(
     # Judge.
     try:
         with Socket() as socket:
-            socket.settimeout(1)
+            socket.settimeout(0.1)
             socket.connect((host, port))
             return True
     except OSError:
@@ -598,13 +598,21 @@ def listen_socket(
     with Socket() as socket:
         socket.bind((host, port))
         socket.listen()
+        socket.settimeout(1)
 
         ## Loop.
         while True:
-            socket_conn, _ = socket.accept()
+            try:
+                socket_conn, _ = socket.accept()
+            except TimeoutError:
+                continue
             with socket_conn:
+                socket_conn.settimeout(1)
                 while True:
-                    data = socket_conn.recv(rece_size)
+                    try:
+                        data = socket_conn.recv(rece_size)
+                    except TimeoutError:
+                        continue
                     if not data:
                         break
 
