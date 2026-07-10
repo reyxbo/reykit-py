@@ -15,7 +15,6 @@ from os.path import abspath as os_abspath, isfile as os_isfile
 from socket import socket as  Socket
 from urllib.parse import (
     urlsplit as urllib_urlsplit,
-    quote as urllib_quote,
     unquote as urllib_unquote
 )
 from requests.api import request as requests_request
@@ -32,10 +31,13 @@ from requests_cache import (
 from mimetypes import guess_type
 from filetype import guess as filetype_guess
 from datetime import datetime
+from json import JSONDecodeError, loads as json_loads
 
 from .rbase import Base, throw
+from .rdata import to_json
 from .ros import File, get_md5
 from .rre import search, split, sub
+from .rwrap import wrap_exc
 
 __all__ = (
     'join_url',
@@ -48,6 +50,7 @@ __all__ = (
     'download',
     'compute_stream_time',
     'listen_socket',
+    'send_socket',
     'RequestCache'
 )
 
@@ -525,10 +528,26 @@ def compute_stream_time(
 
     return seconds
 
+@overload
 def listen_socket(
     host: str,
     port: str | int,
-    handler: Callable[[bytes], Any]
+    handler: Callable[[Any], None]
+) -> None: ...
+
+@overload
+def listen_socket(
+    host: str,
+    port: str | int,
+    handler: Callable[[bytes], None],
+    auto_decode: Literal[False]
+) -> None: ...
+
+def listen_socket(
+    host: str,
+    port: str | int,
+    handler: Callable[[Any], None],
+    auto_decode: bool = True
 ) -> None:
     """
     Listen socket and handle data.
@@ -538,22 +557,61 @@ def listen_socket(
     host : Socket host.
     port : Socket port.
     handler : Handler function.
+    auto_decode : Is it automatically decode to JSON.
     """
 
     # Parameter.
     port = int(port)
-    rece_size = 1024 * 1024 * 1024
+    rece_size = 1073741824 # 1024 * 1024 * 1024
 
-    # Instance.
-    socket = Socket()
-    socket.bind((host, port))
-    socket.listen()
+    # Listen.
+    with Socket() as socket:
+        socket.bind((host, port))
+        socket.listen()
 
-    # Loop.
-    while True:
-        socket_conn, _ = socket.accept()
-        data = socket_conn.recv(rece_size)
-        handler(data)
+        ## Loop.
+        while True:
+            socket_conn, _ = socket.accept()
+            with socket_conn:
+                while True:
+                    data = socket_conn.recv(rece_size)
+                    if not data:
+                        break
+
+                    ### Decode.
+                    if auto_decode:
+                        wrapped_json_loads = wrap_exc(
+                            json_loads,
+                            handler=lambda exc_text, *_: print(exc_text),
+                            exception=JSONDecodeError
+                        )
+                        data = wrapped_json_loads(data.decode('utf-8'))
+                    handler(data)
+
+def send_socket(
+    host: str,
+    port: str | int,
+    data: Any,
+) -> None:
+    """
+    Send socket data.
+
+    Parameters
+    ----------
+    host : Socket host.
+    port : Socket port.
+    data : Socket data.
+    """
+
+    # Parameter.
+    port = int(port)
+    if not isinstance(data, bytes):
+        data: bytes = to_json(data).encode('utf-8')
+
+    # Send.
+    with Socket() as socket:
+        socket.connect((host, port))
+        socket.send(data)
 
 class RequestCache(Base):
     """
