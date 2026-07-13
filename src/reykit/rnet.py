@@ -531,7 +531,7 @@ def compute_stream_time(
 
 def is_socket_listening(
     host: str,
-    port: str | int
+    port: int | str
 ) -> bool:
     """
     Is the socket listening.
@@ -561,21 +561,21 @@ def is_socket_listening(
 @overload
 def listen_socket(
     host: str,
-    port: str | int,
+    port: int | str,
     handler: Callable[[Any], None]
 ) -> None: ...
 
 @overload
 def listen_socket(
     host: str,
-    port: str | int,
+    port: int | str,
     handler: Callable[[bytes], None],
     auto_decode: Literal[False]
 ) -> None: ...
 
 def listen_socket(
     host: str,
-    port: str | int,
+    port: int | str,
     handler: Callable[[Any], None],
     auto_decode: bool = True
 ) -> None:
@@ -628,7 +628,7 @@ def listen_socket(
 
 def send_socket(
     host: str,
-    port: str | int,
+    port: int | str,
     data: Any,
 ) -> None:
     """

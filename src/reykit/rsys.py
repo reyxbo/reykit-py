@@ -536,7 +536,7 @@ def get_process_table() -> list[ProcessInfo]:
 def search_process(
     id_: int | Sequence[int] | None = None,
     name: str | Sequence[str] | None = None,
-    port: str | int | Sequence[str | int] | None = None,
+    port: int | str | Sequence[int | str] | None = None,
 ) -> list[Process]:
     """
     Search process by ID or name or port.
@@ -621,7 +621,7 @@ def search_process(
 def kill_process(
     id_: int | Sequence[int] | None = None,
     name: str | Sequence[str] | None = None,
-    port: str | int | Sequence[str | int] | None = None,
+    port: int | str | Sequence[int | str] | None = None,
 ) -> list[Process]:
     """
     Search and kill process by ID or name or port.
@@ -658,7 +658,7 @@ def kill_process(
 def stop_process(
     id_: int | Sequence[int] | None = None,
     name: str | Sequence[str] | None = None,
-    port: str | int | Sequence[str | int] | None = None,
+    port: int | str | Sequence[int | str] | None = None,
 ) -> list[Process]:
     """
     Search and stop started process by ID or name or port.
@@ -695,7 +695,7 @@ def stop_process(
 def start_process(
     id_: int | Sequence[int] | None = None,
     name: str | Sequence[str] | None = None,
-    port: str | int | Sequence[str | int] | None = None,
+    port: int | str | Sequence[int | str] | None = None,
 ) -> list[Process]:
     """
     Search and start stopped process by ID or name or port.
