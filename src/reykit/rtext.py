@@ -454,7 +454,7 @@ def join_data_text(data: Iterable) -> str:
     # Join.
 
     ## dict type.
-    if type(data) == dict:
+    if type(data) is dict:
         texts = []
         for key, value in data.items():
             key_str = str(key)

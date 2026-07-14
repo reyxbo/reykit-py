@@ -258,7 +258,7 @@ def modify_print(preprocess: Callable[[str], str] | None) -> None:
         __s = preprocess(__s)
 
         # Write.
-        if type(__s) == str:
+        if type(__s) is str:
             write_len = StdoutConfig._io_stdout_write(__s)
             return write_len
 

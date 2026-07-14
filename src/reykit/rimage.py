@@ -132,7 +132,7 @@ def compress_image(
     """
 
     # Parameter.
-    if type(input_image) == str:
+    if type(input_image) is str:
         file = File(input_image)
         input_image = file.str
     now_size = len(input_image)
@@ -193,7 +193,7 @@ def to_pil_image(source: str | bytes) -> Image:
     """
 
     # File path.
-    if type(source) == str:
+    if type(source) is str:
         pil_image = pil_open(source)
 
     # Bytes data.
@@ -226,7 +226,7 @@ def generate_captcha_image(
     """
 
     # Parameter.
-    if type(text) == int:
+    if type(text) is int:
         text = randchar(text, False)
 
     # Generate.

@@ -443,7 +443,7 @@ class Schedule(Base):
         """
 
         # Parameter.
-        if type(task) == Job:
+        if type(task) is Job:
             task_id = task.id
             task_name = task.name
         else:
@@ -495,7 +495,7 @@ class Schedule(Base):
         """
 
         # Parameter.
-        if type(task) == Job:
+        if type(task) is Job:
             task_id = task.id
             task_name = task.name
         else:
@@ -523,7 +523,7 @@ class Schedule(Base):
         """
 
         # Parameter.
-        if type(task) == Job:
+        if type(task) is Job:
             task_id = task.id
             task_name = task.name
         else:
@@ -551,7 +551,7 @@ class Schedule(Base):
         """
 
         # Parameter.
-        if type(task) == Job:
+        if type(task) is Job:
             task_id = task.id
             task_name = task.name
         else:

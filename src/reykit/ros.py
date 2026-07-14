@@ -135,7 +135,7 @@ def get_md5(data: str | bytes) -> str:
     """
 
     # Parameter.
-    if type(data) == str:
+    if type(data) is str:
         data = data.encode()
 
     # Get.
@@ -315,11 +315,10 @@ def read_toml(path: 'str | File') -> dict[str, Any]:
             text = file.str
 
     # Parse.
-
-    ## Handle nan.
-    parse_float = lambda float_str: None if float_str == "nan" else float_str
-
-    params = tomllib_loads(text, parse_float=parse_float)
+    params = tomllib_loads(
+        text,
+        parse_float=lambda float_str: None if float_str == "nan" else float_str
+    )
 
     return params
 
@@ -1949,7 +1948,7 @@ class FileStore(Base):
         file_bytes = read_file_bytes(source)
         file_md5 = get_md5(file_bytes)
         name = name or file_md5
-        delete = delete and type(source) == str
+        delete = delete and type(source) is str
 
         # Exist.
         path = self.index(file_md5, name)

@@ -250,7 +250,7 @@ def throw(
                 if value % 1 == 0
                 else round(value, 3)
                 for value in values
-                if type(value) == float
+                if type(value) is float
             ]
         values = [
             repr(value)
@@ -298,7 +298,7 @@ def warn(
     if infos == ():
         infos = 'Warning!'
     elif len(infos) == 1:
-        if type(infos[0]) == str:
+        if type(infos[0]) is str:
             infos = infos[0]
         else:
             infos = str(infos[0])
@@ -752,7 +752,7 @@ def get_astname(obj: AST) -> str:
             name = ast_dump(obj)
 
     # Again.
-    if type(name) != str:
+    if type(name) is not str:
         name = get_astname(name)
 
     return name
@@ -785,15 +785,15 @@ def get_varname(argname: str, level: int = 1) -> str | list[str] | None:
         return
 
     # Handle type AST.
-    if type(varnames) == tuple:
+    if type(varnames) is tuple:
         varnames = [
             get_astname(varname)
-            if type(varname) != str
+            if type(varname) is not str
             else varname
             for varname in varnames
         ]
     else:
-        if type(varnames) != str:
+        if type(varnames) is not str:
             varnames = get_astname(varnames)
 
     return varnames
@@ -844,11 +844,12 @@ def at_exit(*contents: str | Callable | tuple[Callable, Iterable, Mapping]) -> l
     for content in reversed(contents):
         args = ()
         kwargs = {}
-        if type(content) == str:
-            func = lambda: print(content)
+        if type(content) is str:
+            def func():
+                print(content)
         elif callable(content):
             func = content
-        elif type(content) == tuple:
+        elif type(content) is tuple:
             func, args, kwargs = content
         funcs.append(func)
         atexit_register(func, *args, **kwargs)

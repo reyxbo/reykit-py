@@ -237,7 +237,7 @@ def monkey_sqlalchemy_row_index_field():
         """
 
         # Index.
-        if type(index) == str:
+        if type(index) is str:
             value = self._mapping[index]
         else:
             value = self._data[index]

@@ -143,12 +143,11 @@ class ThreadPool(Base):
 
         Examples
         --------
-        >>> func = lambda *args, **kwargs: print(args, kwargs)
         >>> a = (1, 2)
         >>> b = (3, 4, 5)
         >>> c = (11, 12)
         >>> d = (13, 14, 15)
-        >>> thread_pool = ThreadPool(func, 0, z=0)
+        >>> thread_pool = ThreadPool(lambda *args, **kwargs: print(args, kwargs), 0, z=0)
         >>> thread_pool.batch(a, b, c=c, d=d)
         (0, 1, 3) {'z': 0, 'c': 11, 'd': 13}
         (0, 2, 4) {'z': 0, 'c': 12, 'd': 14}
@@ -354,12 +353,13 @@ async def async_gather(
         after = ()
     elif not is_iterable(after):
         after = (after,)
-    handle_tasks_func = lambda tasks: [
-        task()
-        if asyncio_iscoroutinefunction(task)
-        else task
-        for task in tasks
-    ]
+    def handle_tasks_func(tasks):
+        return [
+            task()
+            if asyncio_iscoroutinefunction(task)
+            else task
+            for task in tasks
+        ]
     coroutines = handle_tasks_func(coroutines)
     before = handle_tasks_func(before)
     after = handle_tasks_func(after)

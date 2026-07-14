@@ -65,17 +65,16 @@ def to_json(
         separators = None
 
     # Convert.
-    default = lambda value: (
-        value.__float__()
-        if type(value) == Decimal
-        else repr(value)
-    )
     string = json_dumps(
         data,
         ensure_ascii=False,
         indent=indent,
         separators=separators,
-        default=default
+        default=lambda value: (
+            value.__float__()
+            if type(value) is Decimal
+            else repr(value)
+        )
     )
 
     return string
@@ -129,7 +128,7 @@ def flatten(data: Any, *, _flattern_data: list | None = None) -> list:
     # Flatten.
 
     ## Recursion dict object.
-    if type(data) == dict:
+    if type(data) is dict:
         for elem in data.values():
             _flattern_data = flatten(
                 elem,
@@ -357,7 +356,8 @@ def default_dict(default: T | Null.Type = Null, data: dict[KT, VT] | None = None
 
     ## Not callable.
     else:
-        default_factory = lambda: default
+        def default_factory():
+            return default
 
     data = data or {}
 
@@ -372,8 +372,7 @@ class FunctionGenerator(Base):
 
     Examples
     --------
-    >>> func = lambda arg1, arg2: arg1 + arg2
-    >>> fgenerator = FunctionGenerator(func, 10)
+    >>> fgenerator = FunctionGenerator(lambda arg1, arg2: arg1 + arg2, 10)
     >>> fgenerator.add(1)
     >>> fgenerator.add(2)
     >>> list(fgenerator)
@@ -547,11 +546,11 @@ def encode_jwt(json: dict[str, Any], key: str | bytes) -> str:
 
     # Check.
     sub = json.get('sub', '')
-    if type(sub) != str:
+    if type(sub) is not str:
         throw(TypeError, sub)
 
     # Parameter.
-    if type(key) != str:
+    if type(key) is not str:
         key = str(key)
     algorithm = 'HS256'
 
@@ -599,7 +598,7 @@ def hash_bcrypt(password: str | bytes) -> bytes:
     """
 
     # Parameter.
-    if type(password) == str:
+    if type(password) is str:
         password = bytes(password, encoding='utf-8')
 
     # Hash.
@@ -623,9 +622,9 @@ def is_hash_bcrypt(password: str | bytes, password_hash: str | bytes) -> bool:
     """
 
     # Parameter.
-    if type(password) == str:
+    if type(password) is str:
         password = bytes(password, encoding='utf-8')
-    if type(password_hash) == str:
+    if type(password_hash) is str:
         password_hash = bytes(password_hash, encoding='utf-8')
 
     # Judge.

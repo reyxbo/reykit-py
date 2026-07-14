@@ -149,9 +149,9 @@ class Table(Base):
 
         # Get fields.
         fields = list(data[0])
-        if type(key_field) == int:
+        if type(key_field) is int:
             key_field = fields[key_field]
-        if type(val_field) == int:
+        if type(val_field) is int:
             val_field = fields[val_field]
 
         # Convert.
@@ -200,7 +200,7 @@ class Table(Base):
 
         # Get fields.
         fields = list(data[0])
-        if type(field) == int:
+        if type(field) is int:
             field = fields[field]
 
         # Convert.
@@ -307,7 +307,7 @@ class Table(Base):
         """
 
         # Check.
-        if type(self.data) == DataFrame:
+        if type(self.data) is DataFrame:
             return self.data
 
         # Parameter.
@@ -430,8 +430,7 @@ class Table(Base):
                 sheets_table_before.append((sheet_set['index'], (sheet_name, sheet_df)))
             else:
                 sheets_table_after.append((sheet_name, sheet_df))
-        sort_func = lambda item: item[0]
-        sheets_table_before.sort(key=sort_func)
+        sheets_table_before.sort(key=lambda item: item[0])
         sheets_table = [sheet_table for sheet_index, sheet_table in sheets_table_before] + sheets_table_after
 
         # Save file.

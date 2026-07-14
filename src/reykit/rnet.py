@@ -103,13 +103,14 @@ def join_url(*paths: str | int | None, **params: dict[str, str | float | bool]) 
 
     # Join parameter.
     if params != {}:
-        handle_value = lambda value: (
-            'true'
-            if value is True
-            else 'false'
-            if value is False
-            else str(value)
-        )
+        def handle_value(value):
+            return (
+                'true'
+                if value is True
+                else 'false'
+                if value is False
+                else str(value)
+            )
         params_str = '&'.join(
             [
                 f'{key}={handle_value(value)}'
@@ -217,16 +218,16 @@ def get_content_type(file: str | bytes) -> str | None:
     # Guess.
     if (
         (
-            type(file) == str
+            type(file) is str
             and os_isfile(file)
-        ) or type(file) == bytes
+        ) or type(file) is bytes
     ):
         file_type_obj = filetype_guess(file)
     else:
         file_type_obj = None
     if file_type_obj is not None:
         file_type = file_type_obj.MIME
-    elif type(file) == str:
+    elif type(file) is str:
         file_type, _ = guess_type(file)
     else:
         file_type = None
@@ -336,27 +337,27 @@ def request(
         else:
             method = 'post'
     if files is None:
-        if type(data) == str:
+        if type(data) is str:
             file = File(data)
             data = file.bytes
             if 'Content-Disposition' not in headers:
                 file_name = file.name_suffix
                 headers['Content-Disposition'] = f'attachment; filename={file_name}'
-        if type(data) == bytes:
+        if type(data) is bytes:
             if 'Content-Type' not in headers:
                 headers['Content-Type'] = get_content_type(data)
     else:
         files = files.copy()
         for key, value in files.items():
-            if type(value) == tuple:
+            if type(value) is tuple:
                 item_data, item_headers = value
             else:
                 item_data, item_headers = value, {}
-            if type(item_data) == str:
+            if type(item_data) is str:
                 file = File(item_data)
                 item_data = file.bytes
                 item_headers.setdefault('filename', file.name_suffix)
-            if type(item_data) == bytes:
+            if type(item_data) is bytes:
                 if 'Content-Type' not in item_headers:
                     item_headers['Content-Type'] = get_content_type(item_data)
             files[key] = (

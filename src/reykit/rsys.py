@@ -336,7 +336,7 @@ def get_cmd_var(*vars: Any) -> list[Any]:
 
         ## Keyword argument.
         dos_value = getattr(namespace, kw_name)
-        if type(dos_value) == list:
+        if type(dos_value) is list:
             value_len = len(dos_value)
             match value_len:
                 case 0:
@@ -431,8 +431,10 @@ def get_computer_info() -> ComputerInfo:
         }
         for user_info in users_info
     ]
-    sort_func = lambda row: row['time']
-    info['login_users'].sort(key=sort_func, reverse=True)
+    info['login_users'].sort(
+        key=lambda row: row['time'],
+        reverse=True
+    )
 
     return info
 
@@ -486,10 +488,8 @@ def get_network_table() -> list[NetWorkInfo]:
     ]
 
     # Sort.
-    sort_func = lambda row: row['local_port']
-    table.sort(key=sort_func)
-    sort_func = lambda row: row['local_ip']
-    table.sort(key=sort_func)
+    table.sort(key=lambda row: row['local_port'])
+    table.sort(key=lambda row: row['local_ip'])
 
     return table
 
@@ -526,10 +526,8 @@ def get_process_table() -> list[ProcessInfo]:
             table.append(info)
 
     # Sort.
-    sort_func = lambda row: row['id']
-    table.sort(key=sort_func)
-    sort_func = lambda row: row['create_time']
-    table.sort(key=sort_func)
+    table.sort(key=lambda row: row['id'])
+    table.sort(key=lambda row: row['create_time'])
 
     return table
 

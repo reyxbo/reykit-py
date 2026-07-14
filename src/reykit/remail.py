@@ -140,9 +140,9 @@ class Email(Base):
         """
 
         # Parameter.
-        if type(show_to) == list:
+        if type(show_to) is list:
             show_to = ','.join(show_to)
-        if type(show_cc) == list:
+        if type(show_cc) is list:
             show_cc = ','.join(show_cc)
 
         # Instance.
@@ -234,7 +234,7 @@ class Email(Base):
         # Parameter.
 
         ## To.
-        if type(to) == str:
+        if type(to) is str:
             to = to.split(',')
 
         ## Cc.
@@ -249,12 +249,12 @@ class Email(Base):
 
         ## Show to.
         show_to = show_to or to
-        if type(show_to) == str:
+        if type(show_to) is str:
             show_to = show_to.split(',')
 
         ## Show cc.
         show_cc = show_cc or cc
-        if type(show_cc) == str:
+        if type(show_cc) is str:
             show_cc = show_cc.split(',')
 
         ## Attachment.
