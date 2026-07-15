@@ -412,8 +412,8 @@ def request(
 
         ## Throw exception.
         if not result:
-            response_text = response.text[:100]
-            if len(response.text) > 100:
+            response_text = response.text[:200]
+            if len(response.text) > 200:
                 response_text += '...'
             response_text = repr(response_text)
             text = f"response code is '{response.status_code}', response content is {response_text}"
