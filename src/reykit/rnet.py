@@ -356,10 +356,10 @@ def request(
             if type(item_data) is str:
                 file = File(item_data)
                 item_data = file.bytes
-                item_headers.setdefault('filename', file.name_suffix)
-            if type(item_data) is bytes:
-                if 'Content-Type' not in item_headers:
-                    item_headers['Content-Type'] = get_content_type(item_data)
+                item_file_name = file.name_suffix
+                item_headers.setdefault('filename', item_file_name)
+            if 'Content-Type' not in item_headers:
+                item_headers['Content-Type'] = get_content_type(item_data)
             files[key] = (
                 item_headers.get('filename', key),
                 item_data,
