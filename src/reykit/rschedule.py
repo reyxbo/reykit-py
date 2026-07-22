@@ -80,8 +80,8 @@ class Schedule(Base):
         coalesce : Whether to coalesce tasks with the same ID.
         block : Whether to block.
         db_engine : Database engine.
-            - "None": Not use database.
-            - "Database": Automatic record to database.
+            - `None`: Not use database.
+            - `Database`: Automatic record to database.
         echo : Whether to print the report.
         """
 
@@ -368,8 +368,8 @@ class Schedule(Base):
         Parameters
         ----------
         task : Task.
-            - "Callable": Use this function.
-            - "ModuleType": Use this `main` function of module.
+            - `Callable`: Use this function.
+            - `ModuleType`: Use this `main` function of module.
         plan : Plan trigger keyword arguments.
         args : Task position arguments.
         kwargs : Task keyword arguments.
