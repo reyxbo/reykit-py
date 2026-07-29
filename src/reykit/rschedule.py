@@ -291,7 +291,7 @@ class Schedule(Base):
                 task(*args, **kwargs)
 
             # Status occurred error.
-            except BaseException:
+            except BaseException: # noqa: BLE001
                 data = {
                     'id': id_,
                     'update_time': ':NOW()',

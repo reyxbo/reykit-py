@@ -7,7 +7,7 @@
 @Explain : Base methods.
 """
 
-from typing import Any, Literal, Callable, Self, TypeVar, NoReturn, overload, final
+from typing import Any, Literal, Self, NoReturn, overload, final
 from collections.abc import Callable, Iterable, Container, Mapping
 from sys import exc_info as sys_exc_info
 from os.path import exists as os_exists
@@ -21,12 +21,6 @@ from ast import AST, Name, Attribute, Call, Starred, keyword, dump as ast_dump
 from varname import VarnameException, argname as varname_argname
 
 __all__ = (
-    'T',
-    'U',
-    'V',
-    'KT',
-    'VT',
-    'CallableT',
     'Base',
     'StaticMeta',
     'ConfigMeta',
@@ -59,15 +53,7 @@ __all__ = (
     'copy_type_hints'
 )
 
-# Generic.
-T = TypeVar('T')
-U = TypeVar('U')
-V = TypeVar('V')
-KT = TypeVar('KT')
-VT = TypeVar('VT')
-CallableT = TypeVar('CallableT', bound=Callable)
-
-class Base(object):
+class Base:
     """
     Base type.
     """
@@ -169,24 +155,24 @@ class Singleton(Base):
     __instance: Self
     'Global singleton instance.'
 
-    def __new__(self, *arg: Any, **kwargs: Any) -> Self:
+    def __new__(cls, *arg: Any, **kwargs: Any) -> Self:
         """
         Build `singleton` instance.
         """
 
         # Built.
-        if hasattr(self, '__instance'):
-            return self.__instance
+        if hasattr(cls, '__instance'):
+            return cls.__instance
 
         # Build.
-        self.__instance = super().__new__(self)
+        cls.__instance = super().__new__(cls)
 
         ## Singleton method.
-        if hasattr(self, "__singleton__"):
-            __singleton__: Callable = getattr(self, "__singleton__")
-            __singleton__(self, *arg, **kwargs)
+        if hasattr(cls, "__singleton__"):
+            __singleton__: Callable = cls.__singleton__
+            __singleton__(cls, *arg, **kwargs)
 
-        return self.__instance
+        return cls.__instance
 
 class ErrorBase(Base, BaseException):
     """
@@ -263,12 +249,12 @@ def throw(
             if values_len == 1:
                 text_value = 'value is ' + text_value
             else:
-                text_value = 'values is (%s)' % text_value
+                text_value = f'values is ({text_value})'
         else:
             names_values = zip(names, values)
             text_value = ', '.join(
                 [
-                    'parameter "%s" is %s' % (name, value)
+                    f'parameter "{name}" is {value}'
                     for name, value in names_values
                 ]
             )
@@ -470,16 +456,15 @@ def is_iterable(
     """
 
     # Judge.
-    if (
+    result = (
         hasattr(obj, '__iter__')
         and not (
             exclude_types is not None
             and type(obj) in exclude_types
         )
-    ):
-        return True
+    )
 
-    return False
+    return result
 
 def is_num_str(
     string: str
@@ -819,8 +804,8 @@ def block() -> None:
                 print('End blocking.')
                 break
 
-            except BaseException:
-                continue
+            except BaseException: # noqa: BLE001, S110
+                pass
 
 def at_exit(*contents: str | Callable | tuple[Callable, Iterable, Mapping]) -> list[Callable]:
     """
@@ -840,12 +825,15 @@ def at_exit(*contents: str | Callable | tuple[Callable, Iterable, Mapping]) -> l
 
     # Register.
     funcs = []
+    def make_func(content: str):
+        def func():
+            print(content)
+        return func
     for content in reversed(contents):
         args = ()
         kwargs = {}
         if type(content) is str:
-            def func():
-                print(content)
+            func = make_func(content)
         elif callable(content):
             func = content
         elif type(content) is tuple:
