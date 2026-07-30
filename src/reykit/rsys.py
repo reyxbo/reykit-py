@@ -378,7 +378,7 @@ def get_computer_info() -> ComputerInfo:
     boot_time = psutil_boot_time()
     info['boot_time'] = datetime.fromtimestamp(
         boot_time
-    ).astimezone().strftime(
+    ).strftime(
         '%Y-%m-%d %H:%M:%S'
     )
 
@@ -422,7 +422,7 @@ def get_computer_info() -> ComputerInfo:
         {
             'time': datetime.fromtimestamp(
                 user_info.started
-            ).astimezone().strftime(
+            ).strftime(
                 '%Y-%m-%d %H:%M:%S'
             ),
             'name': user_info.name,
@@ -509,7 +509,7 @@ def get_process_table() -> list[ProcessInfo]:
         with process.oneshot():
             info['create_time'] = datetime.fromtimestamp(
                 process.create_time()
-            ).astimezone().strftime(
+            ).strftime(
                 '%Y-%m-%d %H:%M:%S'
             )
             info['id'] = process.pid

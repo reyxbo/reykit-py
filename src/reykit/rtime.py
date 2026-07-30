@@ -89,17 +89,17 @@ def now(
     # Return.
     match format_:
         case 'datetime':
-            return Datetime.now().astimezone()
+            return Datetime.now()
         case 'date':
-            return Datetime.now().astimezone().date()
+            return Datetime.now().date()
         case 'time':
-            return Datetime.now().astimezone().time()
+            return Datetime.now().time()
         case 'datetime_str':
-            return Datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S')
+            return Datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         case 'date_str':
-            return Datetime.now().astimezone().strftime('%Y-%m-%d')
+            return Datetime.now().strftime('%Y-%m-%d')
         case 'time_str':
-            return Datetime.now().astimezone().strftime('%H:%M:%S')
+            return Datetime.now().strftime('%H:%M:%S')
         case 'timestamp':
             return int(time_time() * 1000)
         case 'timestamp_s':
@@ -179,7 +179,7 @@ def time_to(
             timestamp = obj.seconds + obj.microseconds / 1000_000
             if timestamp >= 0:
                 timestamp += 57600
-                time = Datetime.fromtimestamp(timestamp).astimezone().time()
+                time = Datetime.fromtimestamp(timestamp).time()
                 if decimal:
                     format_ = '%H:%M:%S.%f'
                 else:
@@ -238,21 +238,21 @@ def text_to_time(
     ## Standard.
     if 14 <= str_len <= 19:
         try:
-            time_obj = Datetime.strptime(string, '%Y-%m-%d %H:%M:%S').astimezone()
+            time_obj = Datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
         except ValueError:
             pass
         else:
             return time_obj
     if 8 <= str_len <= 10:
         try:
-            time_obj = Datetime.strptime(string, '%Y-%m-%d').astimezone().date()
+            time_obj = Datetime.strptime(string, '%Y-%m-%d').date()
         except ValueError:
             pass
         else:
             return time_obj
     if 5 <= str_len <= 8:
         try:
-            time_obj = Datetime.strptime(string, '%H:%M:%S').astimezone().time()
+            time_obj = Datetime.strptime(string, '%H:%M:%S').time()
         except ValueError:
             pass
         else:
@@ -269,7 +269,7 @@ def text_to_time(
                 int(value)
                 for value in result
             ]
-            time_obj = Datetime(year, month, day, hour, minute, second).astimezone()
+            time_obj = Datetime(year, month, day, hour, minute, second)
             return time_obj
 
     ### Type 'date'.
@@ -341,16 +341,16 @@ def to_time(
                 obj.tm_hour,
                 obj.tm_min,
                 obj.tm_sec
-            ).astimezone()
+            )
 
         ## Type 'float'.
         case int() | float():
             int_len, _ = digits(obj)
             match int_len:
                 case 10:
-                    time_obj = Datetime.fromtimestamp(obj).astimezone()
+                    time_obj = Datetime.fromtimestamp(obj)
                 case 13:
-                    time_obj = Datetime.fromtimestamp(obj / 1000).astimezone()
+                    time_obj = Datetime.fromtimestamp(obj / 1000)
                 case _:
                     time_obj = None
 
