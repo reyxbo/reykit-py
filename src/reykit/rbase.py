@@ -490,15 +490,15 @@ def is_num_str(
     return True
 
 @overload
-def get_first_notnone(*values: None, default: T) -> T: ...
+def get_first_notnone[T](*values: None, default: T) -> T: ...
 
 @overload
 def get_first_notnone(*values: None) -> NoReturn: ...
 
 @overload
-def get_first_notnone(*values: T) -> T: ...
+def get_first_notnone[T](*values: T) -> T: ...
 
-def get_first_notnone(*values: T, default: U | Null.Type = Null) -> T | U:
+def get_first_notnone[T, U](*values: T, default: U | Null.Type = Null) -> T | U:
     """
     Get the first value that is not `None`.
 
@@ -844,7 +844,7 @@ def at_exit(*contents: str | Callable | tuple[Callable, Iterable, Mapping]) -> l
 
     return funcs
 
-def copy_type_hints(
+def copy_type_hints[CallableT: Callable](
     real_func: Callable,
     _: CallableT
 ) -> CallableT:
