@@ -18,7 +18,7 @@ from threading import Thread
 from argparse import ArgumentParser
 from contextlib import redirect_stdout
 
-from .rbase import T, throw, catch_exc, get_arg_info
+from .rbase import throw, catch_exc, get_arg_info
 from .rstdout import echo
 from .rtime import now, time_to, TimeMark
 
@@ -130,7 +130,7 @@ def wrap_wrap(decorator: Decorator | None = None) -> Decorator:
     return _wrap
 
 @overload
-def wrap_disabled(
+def wrap_disabled[T](
     func: Callable[..., T],
     *,
     text: str = 'this function is disabled'
@@ -143,7 +143,7 @@ def wrap_disabled(
 ) -> Callable[[Callable], NoReturn]: ...
 
 @wrap_wrap
-def wrap_disabled(
+def wrap_disabled[T](
     func: Callable[..., T],
     args: Any,
     kwargs: Any,
@@ -161,34 +161,34 @@ def wrap_disabled(
     throw(AssertionError, text=text)
 
 @overload
-def wrap_runtime(
+def wrap_runtime[T](
     func: Callable[..., T],
     *,
     to_print: bool = True
 ) -> Callable[..., T]: ...
 
 @overload
-def wrap_runtime(
+def wrap_runtime[T](
     func: Callable[..., T],
     to_return: Literal[True],
     to_print: bool = True
 ) -> Callable[..., tuple[T, str, Datetime, Timedelta, Datetime]]: ...
 
 @overload
-def wrap_runtime(
+def wrap_runtime[T](
     *,
     to_print: bool = True
 ) -> Callable[[Callable[..., T]], T]: ...
 
 @overload
-def wrap_runtime(
+def wrap_runtime[T](
     *,
     to_return: Literal[True],
     to_print: bool = True
 ) -> Callable[[Callable[..., T]], tuple[T, str, Datetime, Timedelta, Datetime]]: ...
 
 @wrap_wrap
-def wrap_runtime(
+def wrap_runtime[T](
     func: Callable[..., T],
     args: Any,
     kwargs: Any,
@@ -224,11 +224,7 @@ def wrap_runtime(
     start_str = time_to(start_time, True)[:-3]
     spend_str = time_to(spend_time, True)[:-3]
     end_str = time_to(end_time, True)[:-3]
-    report = 'Start: %s -> Spend: %ss -> End: %s' % (
-        start_str,
-        spend_str,
-        end_str
-    )
+    report = f'Start: {start_str} -> Spend: {spend_str}s -> End: {end_str}'
     title = func.__name__
 
     # Print.
@@ -277,7 +273,7 @@ def wrap_thread(
     """
 
     # Parameter.
-    thread_name = '%s_%d' % (func.__name__, now('timestamp'))
+    thread_name = f'{func.__name__}_{int(now('timestamp'))}'
 
     # Create thread.
     thread = Thread(target=func, name=thread_name, args=args, kwargs=kwargs)
@@ -289,7 +285,7 @@ def wrap_thread(
     return thread
 
 @overload
-def wrap_exc(
+def wrap_exc[T](
     func: Callable[..., T],
     *,
     handler: Callable[[str, BaseException, StackSummary], Any],
@@ -297,14 +293,14 @@ def wrap_exc(
 ) -> Callable[..., T | None]: ...
 
 @overload
-def wrap_exc(
+def wrap_exc[T](
     *,
     handler: Callable[[str, BaseException, StackSummary], Any],
     exception: BaseException | tuple[BaseException, ...] | None = BaseException
 ) -> Callable[[Callable[..., T]], T | None]: ...
 
 @wrap_wrap
-def wrap_exc(
+def wrap_exc[T](
     func: Callable[..., T],
     args: Any,
     kwargs: Any,
@@ -340,7 +336,7 @@ def wrap_exc(
         return result
 
 @overload
-def wrap_retry(
+def wrap_retry[T](
     func: Callable[..., T],
     *,
     total: int = 1,
@@ -349,7 +345,7 @@ def wrap_retry(
 ) -> Callable[..., T]: ...
 
 @overload
-def wrap_retry(
+def wrap_retry[T](
     *,
     total: int = 1,
     handler: Callable[[tuple[str, BaseException, StackSummary]], Any] | None = None,
@@ -357,7 +353,7 @@ def wrap_retry(
 ) -> Callable[[Callable[..., T]], T]: ...
 
 @wrap_wrap
-def wrap_retry(
+def wrap_retry[T](
     func: Callable[..., T],
     args: Any,
     kwargs: Any,
@@ -383,7 +379,7 @@ def wrap_retry(
     """
 
     # Loop.
-    for _ in range(0, total - 1):
+    for _ in range(total - 1):
 
         # Try.
         try:
@@ -404,15 +400,15 @@ def wrap_retry(
     return result
 
 @overload
-def wrap_dos_command(
+def wrap_dos_command[T](
     func: Callable[..., T]
 ) -> Callable[..., T]: ...
 
 @overload
-def wrap_dos_command() -> Callable[[Callable[..., T]], T]: ...
+def wrap_dos_command[T]() -> Callable[[Callable[..., T]], T]: ...
 
 @wrap_wrap
-def wrap_dos_command(
+def wrap_dos_command[T](
     func: Callable[..., T],
     args: Any,
     kwargs: Any,
@@ -438,7 +434,7 @@ def wrap_dos_command(
     # Set DOS command.
     usage = inspect_getdoc(func)
     if usage is not None:
-        usage = 'input arguments to function "%s"\n\n%s' % (func.__name__, usage)
+        usage = f'input arguments to function "{func.__name__}"\n\n{usage}'
     parser = ArgumentParser(usage=usage)
     for info in arg_info:
         annotation_text = str(info['annotation'])
@@ -528,20 +524,20 @@ def wrap_dos_command(
 wrap_cache_data: dict[Callable, list[tuple[Any, Any, Any]]] = {}
 
 @overload
-def wrap_cache(
+def wrap_cache[T](
     func: Callable[..., T],
     *,
     overwrite: bool = False
 ) -> Callable[..., T]: ...
 
 @overload
-def wrap_cache(
+def wrap_cache[T](
     *,
     overwrite: bool = False
 ) -> Callable[[Callable[..., T]], T]: ...
 
 @wrap_wrap
-def wrap_cache(
+def wrap_cache[T](
     func: Callable[..., T],
     args: Any,
     kwargs: Any,
@@ -591,20 +587,20 @@ def wrap_cache(
     return result
 
 @overload
-def wrap_redirect_stdout(
+def wrap_redirect_stdout[T](
     func: Callable[..., T],
     *,
     redirect: list | IOBase | None = None
 ) -> Callable[..., T]: ...
 
 @overload
-def wrap_redirect_stdout(
+def wrap_redirect_stdout[T](
     *,
     redirect: list | IOBase | None = None
 ) -> Callable[[Callable[..., T]], T]: ...
 
 @wrap_wrap
-def wrap_redirect_stdout(
+def wrap_redirect_stdout[T](
     func: Callable[..., T],
     args: Any,
     kwargs: Any,

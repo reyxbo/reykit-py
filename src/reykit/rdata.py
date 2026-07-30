@@ -17,7 +17,7 @@ from jwt import encode as jwt_encode, decode as jwt_decode
 from jwt.exceptions import InvalidTokenError
 from bcrypt import gensalt as bcrypt_gensalt, hashpw as bcrypt_hashpw, checkpw as bcrypt_checkpw
 
-from .rbase import T, KT, VT, Base, Null, throw, check_least_one, check_most_one, is_iterable
+from .rbase import Base, Null, throw, check_least_one, check_most_one, is_iterable
 
 __all__ = (
     'to_json',
@@ -149,12 +149,12 @@ def flatten(data: Any, *, _flattern_data: list | None = None) -> list:
     return _flattern_data
 
 @overload
-def split(data: Iterable[T], share: int) -> list[list[T]]: ...
+def split[T](data: Iterable[T], share: int) -> list[list[T]]: ...
 
 @overload
-def split(data: Iterable[T], *, bin_size: int) -> list[list[T]]: ...
+def split[T](data: Iterable[T], *, bin_size: int) -> list[list[T]]: ...
 
-def split(data: Iterable[T], share: int | None = None, bin_size: int | None = None) -> list[list[T]]:
+def split[T](data: Iterable[T], share: int | None = None, bin_size: int | None = None) -> list[list[T]]:
     """
     Split data into multiple data.
 
@@ -201,7 +201,7 @@ def split(data: Iterable[T], share: int | None = None, bin_size: int | None = No
 
     return _data
 
-def unique(data: Iterable[T]) -> list[T]:
+def unique[T](data: Iterable[T]) -> list[T]:
     """
     De duplication of data.
 
@@ -295,12 +295,12 @@ def objs_in(arr: Iterable, *objs: Any, mode: Literal['or', 'and'] = 'or') -> boo
             return True
 
 @overload
-def chain(*iterables: dict[KT, VT]) -> ChainMap[KT, VT]: ...
+def chain[KT, VT](*iterables: dict[KT, VT]) -> ChainMap[KT, VT]: ...
 
 @overload
-def chain(*iterables: Iterable[T]) -> IChain[T]: ...
+def chain[T](*iterables: Iterable[T]) -> IChain[T]: ...
 
-def chain(*iterables: dict[KT, VT] | Iterable[T]) -> ChainMap[KT, VT] | IChain[T]:
+def chain[T, KT, VT](*iterables: dict[KT, VT] | Iterable[T]) -> ChainMap[KT, VT] | IChain[T]:
     """
     Connect multiple iterables.
 
@@ -316,12 +316,7 @@ def chain(*iterables: dict[KT, VT] | Iterable[T]) -> ChainMap[KT, VT] | IChain[T
     """
 
     # Dict.
-    if all(
-        [
-            isinstance(iterable, dict)
-            for iterable in iterables
-        ]
-    ):
+    if all(isinstance(iterable, dict) for iterable in iterables):
         data = ChainMap(*iterables)
 
     # Other.
@@ -330,7 +325,7 @@ def chain(*iterables: dict[KT, VT] | Iterable[T]) -> ChainMap[KT, VT] | IChain[T
 
     return data
 
-def default_dict(default: T | Null.Type = Null, data: dict[KT, VT] | None = None) -> Defaultdict[KT, VT | T]:
+def default_dict[T, KT, VT](default: T | Null.Type = Null, data: dict[KT, VT] | None = None) -> Defaultdict[KT, VT | T]:
     """
     Set `dict` instance, default value when key does not exist.
 

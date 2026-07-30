@@ -22,7 +22,7 @@ __all__ = (
 
 BASE62_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
-def is_int(number: int | float) -> bool:
+def is_int(number: float) -> bool:
     """
     Judge is integer, excluding decimal part is 0.
 
@@ -44,7 +44,7 @@ def is_int(number: int | float) -> bool:
 
     return judge
 
-def digits(number: int | float) -> tuple[int, int]:
+def digits(number: float) -> tuple[int, int]:
     """
     Judge the number of integer digits and decimal digits, excluding decimal part is 0.
 
@@ -175,8 +175,7 @@ def number_ch(number: int) -> str:
     )
     if number_str.startswith('一十'):
         number_str = number_str[1:]
-    if number_str.endswith('零'):
-        number_str = number_str[:-1]
+    number_str = number_str.removesuffix('零')
 
     return number_str
 

@@ -7,14 +7,14 @@
 @Explain : Standard output and input methods.
 """
 
-from typing import Any, Literal, Final
+from typing import Any, Literal, Final, ClassVar
 from collections.abc import Callable, Iterable
 import sys
 from io import TextIOWrapper
 from os import devnull as os_devnull, isatty as os_isatty, get_terminal_size as os_get_terminal_size
 from os.path import abspath as os_abspath
 
-from .rbase import T, Config, get_stack_param, get_varname
+from .rbase import Config, get_stack_param, get_varname
 
 __all__ = (
     'StdoutConfig',
@@ -41,7 +41,7 @@ class StdoutConfig(Config):
     _modified: bool = False
 
     # IO.
-    _io_null: TextIOWrapper = open(os_devnull, 'w')
+    _io_null: TextIOWrapper = open(os_devnull, 'w') # noqa: SIM115
     _io_stdout: TextIOWrapper = sys.stdout
     _io_stdout_write: Callable[[str], int] = sys.stdout.write
 
@@ -50,9 +50,9 @@ class StdoutConfig(Config):
     'Whether force methods print frame use ascii border.'
 
     # Added print position.
-    _added_print_position: set = set()
+    _added_print_position: ClassVar[set] = set()
 
-def get_terminal_size(
+def get_terminal_size[T](
     stream: Literal['stdin', 'stdout', 'stderr'] = 'stdout',
     default: T = (80, 24)
 ) -> tuple[int, int] | T:
@@ -240,7 +240,7 @@ def modify_print(preprocess: Callable[[str], str] | None) -> None:
         - `Callable[[str], None]`: Input old text, no output, will not trigger printing.
     """
 
-    def write(__s: str) -> int | None:
+    def write(__s: str, /) -> int | None:
         """
         Modified standard output write method.
 
@@ -287,7 +287,7 @@ def add_print_position() -> None:
     Add position text to standard output.
     """
 
-    def preprocess(__s: str) -> str:
+    def preprocess(__s: str, /) -> str:
         """
         Preprocess function.
 
@@ -312,14 +312,14 @@ def add_print_position() -> None:
             stack_floor = stack_params[-2]
 
         # Add.
-        position = 'File "%s", line %s' % (stack_floor['filename'], stack_floor['lineno'])
+        position = f'File "{stack_floor['filename']}", line {stack_floor['lineno']}'
 
         # Added.
         if position in StdoutConfig._added_print_position:
             return __s
 
         StdoutConfig._added_print_position.add(position)
-        __s = '%s\n%s' % (position, __s)
+        __s = f'{position}\n{__s}'
 
         return __s
 

@@ -804,9 +804,6 @@ def block() -> None:
                 print('End blocking.')
                 break
 
-            except BaseException: # noqa: BLE001, S110
-                pass
-
 def at_exit(*contents: str | Callable | tuple[Callable, Iterable, Mapping]) -> list[Callable]:
     """
     At exiting print text or execute function.

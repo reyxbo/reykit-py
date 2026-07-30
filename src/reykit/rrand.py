@@ -7,7 +7,7 @@
 @Explain : Random methods.
 """
 
-from typing import Literal, Self, overload
+from typing import Literal, Self, ClassVar, overload
 from collections.abc import Sequence
 from string import digits as string_digits, ascii_letters as string_ascii_letters, punctuation as string_punctuation
 from math import ceil as math_ceil
@@ -15,7 +15,7 @@ from random import Random
 from secrets import randbelow as secrets_randbelow
 from threading import get_ident as threading_get_ident
 
-from .rbase import T, Base, Config, throw
+from .rbase import Base, Config, throw
 from .rnum import digits
 
 __all__ = (
@@ -34,7 +34,7 @@ class RandomConfig(Config):
     """
 
     # RRandom.
-    _rrandom_dict: dict[int, 'RandomSeed'] = {}
+    _rrandom_dict: ClassVar[dict[int, 'RandomSeed']] = {}
 
 class RandomSeed(Base):
     """
@@ -54,7 +54,7 @@ class RandomSeed(Base):
     >>>     randn()
     """
 
-    def __init__(self, seed: int | float | str | bytes | bytearray | None = None) -> None:
+    def __init__(self, seed: float | str | bytes | bytearray | None = None) -> None:
         """
         Build instance attributes.
 
@@ -62,7 +62,7 @@ class RandomSeed(Base):
         ----------
         seed : Random seed.
             - `None`: Clear seed.
-            - `int | float | str | bytes | bytearray`: Set seed.
+            - `float | str | bytes | bytearray`: Set seed.
         """
 
         # Delete.
@@ -225,20 +225,20 @@ def randb(pr: float = 0.5) -> bool:
     return result
 
 @overload
-def randi(
+def randi[T](
     data: Sequence[T],
     multi: None = None,
     unique: bool = True
 ) -> T: ...
 
 @overload
-def randi(
+def randi[T](
     data: Sequence,
     multi: int,
     unique: bool = True
 ) -> list[T]: ...
 
-def randi(
+def randi[T](
     data: Sequence,
     multi: int | None = None,
     unique: bool = True
@@ -346,7 +346,7 @@ def randchar(
 
     return chars
 
-def randsort(data: Sequence[T]) -> list[T]:
+def randsort[T](data: Sequence[T]) -> list[T]:
     """
     Random sorting data.
 

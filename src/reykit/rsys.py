@@ -7,7 +7,7 @@
 @Explain : Interpreter system methods.
 """
 
-from typing import Any, TypedDict, Literal, overload
+from typing import Any, TypedDict, Literal, ClassVar, overload
 from collections.abc import Iterable, Sequence
 from sys import path as sys_path, modules as sys_modules, maxsize as sys_maxsize
 from os import environ as os_environ, getpid as os_getpid
@@ -100,7 +100,7 @@ class SystemConfig(Config):
     """
 
     # Added environment path.
-    _added_env_paths: list[str] = []
+    _added_env_paths: ClassVar[list[str]] = []
 
 env = os_environ
 
@@ -378,7 +378,7 @@ def get_computer_info() -> ComputerInfo:
     boot_time = psutil_boot_time()
     info['boot_time'] = datetime.fromtimestamp(
         boot_time
-    ).strftime(
+    ).astimezone().strftime(
         '%Y-%m-%d %H:%M:%S'
     )
 
@@ -422,7 +422,7 @@ def get_computer_info() -> ComputerInfo:
         {
             'time': datetime.fromtimestamp(
                 user_info.started
-            ).strftime(
+            ).astimezone().strftime(
                 '%Y-%m-%d %H:%M:%S'
             ),
             'name': user_info.name,
@@ -509,7 +509,7 @@ def get_process_table() -> list[ProcessInfo]:
         with process.oneshot():
             info['create_time'] = datetime.fromtimestamp(
                 process.create_time()
-            ).strftime(
+            ).astimezone().strftime(
                 '%Y-%m-%d %H:%M:%S'
             )
             info['id'] = process.pid
@@ -603,10 +603,10 @@ def search_process(
 
     ## Port.
     for info in table:
-        for port in ports:
+        for port_i in ports:
             if (
                 info['ports'] is not None
-                and port in info['ports']
+                and port_i in info['ports']
                 and psutil_pid_exists(info['id'])
             ):
                 process = Process(info['id'])

@@ -48,7 +48,7 @@ def monkey_sqlalchemy_result_more_fetch():
     # Import.
     from typing import Self
     from sqlalchemy import Result as BaseResult, CursorResult, ChunkedIteratorResult
-    from pandas import DataFrame, NA, concat
+    from pandas import DataFrame, concat
     from .rbase import Base
     from .rstdout import echo
     from .rtable import Table

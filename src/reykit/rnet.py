@@ -146,9 +146,9 @@ def split_url(url: str) -> tuple[str, dict[str, str]]:
     # Split parameter.
     params = {
         key: urllib_unquote(value)
-        for key, value in map(
-            lambda item: item.split('=', 1),
-            params_str.split('&')
+        for key, value in (
+            i.split('=', 1)
+            for i in params_str.split('&')
         )
     }
 
@@ -193,9 +193,9 @@ def split_cookie(cookie: str) -> dict[str, str]:
     # Split parameter.
     params = {
         key: value
-        for key, value in map(
-            lambda item: item.split('=', 1),
-            cookie.split('; ')
+        for key, value in (
+            i.split('=', 1)
+            for i in cookie.split('; ')
         )
     }
 
@@ -342,9 +342,11 @@ def request(
             if 'Content-Disposition' not in headers:
                 file_name = file.name_suffix
                 headers['Content-Disposition'] = f'attachment; filename={file_name}'
-        if type(data) is bytes:
-            if 'Content-Type' not in headers:
-                headers['Content-Type'] = get_content_type(data)
+        if (
+            type(data) is bytes
+            and 'Content-Type' not in headers
+        ):
+            headers['Content-Type'] = get_content_type(data)
     else:
         files = files.copy()
         for key, value in files.items():

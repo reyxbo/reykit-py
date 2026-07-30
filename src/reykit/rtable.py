@@ -365,7 +365,7 @@ class Table(Base):
         self,
         path: str = 'data.xlsx',
         group_field: str | None = None,
-        sheets_set: dict[str | int, SheetSet] = {}
+        sheets_set: dict[str | int, SheetSet] | None = None
     ) -> str:
         """
         Convert data to save Excel format file and return sheet name and sheet data.
@@ -402,6 +402,7 @@ class Table(Base):
         # Parameter.
         data = self.to_df()
         path = os_abspath(path)
+        sheets_set = sheets_set or {}
 
         # Generate sheets.
         if group_field is None:

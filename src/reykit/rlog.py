@@ -163,10 +163,7 @@ class Log(Base):
         # Format 'format_path'.
         if '%(format_path)s' in format_:
             message_stack = self.__get_message_stack()
-            record.format_path = '%s:%s' % (
-                message_stack['filename'],
-                message_stack['lineno']
-            )
+            record.format_path = f'{message_stack['filename']}:{message_stack['lineno']}'
 
         # Format 'format_message'.
         if '%(format_message)s' in format_:
@@ -230,19 +227,16 @@ class Log(Base):
 
         # 'format_time'.
         if '%(format_time)s' in format_:
-            record.format_time = '\033[32m%s\033[0m' % record.format_time
+            record.format_time = f'\033[32m{record.format_time}\033[0m'
 
         # 'format_levelname'.
         if '%(format_levelname)s' in format_:
             level_color_code = self.get_level_color_ansi(record.levelno)
-            record.format_levelname = '%s%s\033[0m' % (
-                level_color_code,
-                record.format_levelname
-            )
+            record.format_levelname = f'{level_color_code}{record.format_levelname}\033[0m'
 
         # 'format_path'.
         if '%(format_path)s' in format_:
-            record.format_path = '\033[36m%s\033[0m' % record.format_path
+            record.format_path = f'\033[36m{record.format_path}\033[0m'
 
         # 'format_message'.
         if (
@@ -250,10 +244,7 @@ class Log(Base):
             and search('\033\\[[\\d;]+?m', record.format_message) is None
         ):
             level_color_code = self.get_level_color_ansi(record.levelno)
-            record.format_message = '%s%s\033[0m' % (
-                level_color_code,
-                record.format_message
-            )
+            record.format_message = f'{level_color_code}{record.format_message}\033[0m'
 
     def __supply_format_file(
         self,
@@ -431,7 +422,7 @@ class Log(Base):
         self,
         path: str | None = None,
         *,
-        time: float | Literal['m', 'w0', 'w1', 'w2', 'w3', 'w4', 'w5', 'w6'] = None,
+        time: float | Literal['m', 'w0', 'w1', 'w2', 'w3', 'w4', 'w5', 'w6'] | None = None,
         level: int = DEBUG,
         format_: str | None = None,
         filter_: Callable[[LogRecord], bool] | None = None
@@ -667,7 +658,7 @@ class Log(Base):
         printing : Whether to still print.
         """
 
-        def preprocess(__s: str) -> str:
+        def preprocess(__s: str, /) -> str:
             """
             Preprocess function.
 
@@ -681,7 +672,7 @@ class Log(Base):
             """
 
             # Log.
-            if __s not in ('\n', ' ', '[0m'):
+            if __s not in ('\n', ' ', '\x1b[0m'):
                 self(__s, level=self.INFO, catch=False)
 
             # Print.
@@ -765,10 +756,7 @@ class Log(Base):
             catch
             and exc is not None
         ):
-            messages = '%s\n%s' % (
-                messages,
-                exc_text
-            )
+            messages = f'{messages}\n{exc_text}'
 
         # Record.
         self.logger.log(level, messages, extra=params)

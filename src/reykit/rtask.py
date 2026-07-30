@@ -28,7 +28,7 @@ from asyncio import (
 )
 from aiohttp import ClientSession, ClientResponse
 
-from .rbase import T, Base, throw, check_most_one, is_iterable
+from .rbase import Base, throw, check_most_one, is_iterable
 from .rtime import randn, TimeMark
 from .rwrap import wrap_thread
 
@@ -287,7 +287,7 @@ class ThreadPool(Base):
     __mul__ = repeat
 
 @overload
-async def async_gather(
+async def async_gather[T](
     coroutine: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
     *,
     before: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
@@ -296,7 +296,7 @@ async def async_gather(
 ) -> T: ...
 
 @overload
-async def async_gather(
+async def async_gather[T](
     *coroutines: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
     before: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
     after: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
@@ -304,7 +304,7 @@ async def async_gather(
 ) -> list[T]: ...
 
 @overload
-async def async_gather(
+async def async_gather[T](
     coroutine: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
     *,
     before: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
@@ -313,14 +313,14 @@ async def async_gather(
 ) -> T | BaseException: ...
 
 @overload
-async def async_gather(
+async def async_gather[T](
     *coroutines: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
     before: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
     after: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
     return_exc: Literal[True]
 ) -> list[T | BaseException]: ...
 
-async def async_gather(
+async def async_gather[T](
     *coroutines: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
     before: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
     after: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
@@ -381,7 +381,7 @@ async def async_gather(
     return results
 
 @overload
-def async_run(
+def async_run[T](
     coroutine: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
     *,
     before: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
@@ -390,7 +390,7 @@ def async_run(
 ) -> T: ...
 
 @overload
-def async_run(
+def async_run[T](
     *coroutines: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
     before: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
     after: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
@@ -398,7 +398,7 @@ def async_run(
 ) -> list[T]: ...
 
 @overload
-def async_run(
+def async_run[T](
     coroutine: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
     *,
     before: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
@@ -407,14 +407,14 @@ def async_run(
 ) -> T | BaseException: ...
 
 @overload
-def async_run(
+def async_run[T](
     *coroutines: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
     before: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
     after: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
     return_exc: Literal[True]
 ) -> list[T | BaseException]: ...
 
-def async_run(
+def async_run[T](
     *coroutines: Coroutine[Any, Any, T] | ATask[Any, Any, T] | Callable[[], Coroutine[Any, Any, T]],
     before: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
     after: CallableCoroutine | Sequence[CallableCoroutine] | None = None,
@@ -655,7 +655,7 @@ async def async_request(
 ) -> list: ...
 
 @overload
-async def async_request(
+async def async_request[T](
     url: str,
     params: dict | None = None,
     data: dict | str | bytes | None = None,
@@ -670,7 +670,7 @@ async def async_request(
 ) -> T: ...
 
 @overload
-async def async_request(
+async def async_request[T](
     url: str,
     params: dict | None = None,
     *,
@@ -684,7 +684,7 @@ async def async_request(
     handler: Callable[[ClientResponse], Coroutine[Any, Any, T] | T]
 ) -> T: ...
 
-async def async_request(
+async def async_request[T](
     url: str,
     params: dict | None = None,
     data: dict | str | bytes | None = None,
@@ -758,10 +758,9 @@ async def async_request(
             method = 'post'
 
     # Session.
-    async with ClientSession() as session:
-
-        # Request.
-        async with session.request(
+    async with (
+        ClientSession() as session,
+        session.request(
             method,
             url,
             params=params,
@@ -771,95 +770,96 @@ async def async_request(
             timeout=timeout,
             proxy=proxy,
             ssl=ssl
-        ) as response:
+        ) as response
+    ):
 
-            # Check code.
-            if check is not False:
-                if check is True:
-                    range_ = None
-                else:
-                    range_ = check
-                match range_:
-                    case None:
-                        result = response.status // 100 == 2
-                    case int():
-                        result = response.status == range_
-                    case _ if hasattr(range_, '__contains__'):
-                        result = response.status in range_
-                    case _:
-                        throw(TypeError, range_)
-
-                ## Throw exception.
-                if not result:
-                    response_text = await response.text()
-                    response_text = response_text[:100]
-                    if len(response_text) > 100:
-                        response_text += '...'
-                    response_text = repr(response_text)
-                    text = f"response code is '{response.status_code}', response content is {response_text}"
-                    throw(AssertionError, text=text)
-
-            # Receive.
-            match handler:
-
-                ## Auto.
+        # Check code.
+        if check is not False:
+            if check is True:
+                range_ = None
+            else:
+                range_ = check
+            match range_:
                 case None:
-                    match response.content_type:
-                        case 'application/json':
-                            result = await response.json()
-                        case 'text/plain; charset=utf-8':
+                    result = response.status // 100 == 2
+                case int():
+                    result = response.status == range_
+                case _ if hasattr(range_, '__contains__'):
+                    result = response.status in range_
+                case _:
+                    throw(TypeError, range_)
 
-                            # Set encode type.
-                            if response.get_encoding() == 'ISO-8859-1':
-                                encoding = 'utf-8'
-                            else:
-                                encoding = None
+            ## Throw exception.
+            if not result:
+                response_text = await response.text()
+                response_text = response_text[:100]
+                if len(response_text) > 100:
+                    response_text += '...'
+                response_text = repr(response_text)
+                text = f"response code is '{response.status_code}', response content is {response_text}"
+                throw(AssertionError, text=text)
 
-                            result = await response.text(encoding=encoding)
-                        case _:
-                            result = await response.read()
+        # Receive.
+        match handler:
 
-                ## Attribute.
-                case str():
-                    result = getattr(response, handler)
+            ## Auto.
+            case None:
+                match response.content_type:
+                    case 'application/json':
+                        result = await response.json()
+                    case 'text/plain; charset=utf-8':
 
-                    ### Method.
-                    if callable(result):
-                        result = result()
+                        # Set encode type.
+                        if response.get_encoding() == 'ISO-8859-1':
+                            encoding = 'utf-8'
+                        else:
+                            encoding = None
 
-                        #### Coroutine.
-                        if asyncio_iscoroutine(result):
-                            result = await result
+                        result = await response.text(encoding=encoding)
+                    case _:
+                        result = await response.read()
 
-                ## Attributes.
-                case tuple():
-                    result = []
-                    for key in handler:
-                        result_element = getattr(response, key)
+            ## Attribute.
+            case str():
+                result = getattr(response, handler)
 
-                        ### Method.
-                        if callable(result_element):
-                            result_element = result_element()
+                ### Method.
+                if callable(result):
+                    result = result()
 
-                            #### Coroutine.
-                            if asyncio_iscoroutine(result_element):
-                                result_element = await result_element
-
-                        result.append(result_element)
-
-                ## Method.
-                case _ if callable(handler):
-                    result = handler(response)
-
-                    ### Coroutine.
+                    #### Coroutine.
                     if asyncio_iscoroutine(result):
                         result = await result
 
-                ## Throw exception.
-                case _:
-                    throw(TypeError, handler)
+            ## Attributes.
+            case tuple():
+                result = []
+                for key in handler:
+                    result_element = getattr(response, key)
 
-            return result
+                    ### Method.
+                    if callable(result_element):
+                        result_element = result_element()
+
+                        #### Coroutine.
+                        if asyncio_iscoroutine(result_element):
+                            result_element = await result_element
+
+                    result.append(result_element)
+
+            ## Method.
+            case _ if callable(handler):
+                result = handler(response)
+
+                ### Coroutine.
+                if asyncio_iscoroutine(result):
+                    result = await result
+
+            ## Throw exception.
+            case _:
+                throw(TypeError, handler)
+
+        return result
 
 class AsyncPool(Base):
     """

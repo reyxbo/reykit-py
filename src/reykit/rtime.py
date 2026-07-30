@@ -22,7 +22,7 @@ from datetime import (
     timedelta as Timedelta
 )
 
-from .rbase import T, Base, throw
+from .rbase import Base, throw
 from .rnum import digits
 from .rrand import randn
 from .rre import search
@@ -89,17 +89,17 @@ def now(
     # Return.
     match format_:
         case 'datetime':
-            return Datetime.now()
+            return Datetime.now().astimezone()
         case 'date':
-            return Datetime.now().date()
+            return Datetime.now().astimezone().date()
         case 'time':
-            return Datetime.now().time()
+            return Datetime.now().astimezone().time()
         case 'datetime_str':
-            return Datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            return Datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S')
         case 'date_str':
-            return Datetime.now().strftime('%Y-%m-%d')
+            return Datetime.now().astimezone().strftime('%Y-%m-%d')
         case 'time_str':
-            return Datetime.now().strftime('%H:%M:%S')
+            return Datetime.now().astimezone().strftime('%H:%M:%S')
         case 'timestamp':
             return int(time_time() * 1000)
         case 'timestamp_s':
@@ -122,7 +122,7 @@ def time_to(
 ) -> NoReturn: ...
 
 @overload
-def time_to(
+def time_to[T](
     obj: T,
     *,
     raising: Literal[False]
@@ -179,7 +179,7 @@ def time_to(
             timestamp = obj.seconds + obj.microseconds / 1000_000
             if timestamp >= 0:
                 timestamp += 57600
-                time = Datetime.fromtimestamp(timestamp).time()
+                time = Datetime.fromtimestamp(timestamp).astimezone().time()
                 if decimal:
                     format_ = '%H:%M:%S.%f'
                 else:
@@ -238,21 +238,21 @@ def text_to_time(
     ## Standard.
     if 14 <= str_len <= 19:
         try:
-            time_obj = Datetime.strptime(string, '%Y-%m-%d %H:%M:%S')
+            time_obj = Datetime.strptime(string, '%Y-%m-%d %H:%M:%S').astimezone()
         except ValueError:
             pass
         else:
             return time_obj
     if 8 <= str_len <= 10:
         try:
-            time_obj = Datetime.strptime(string, '%Y-%m-%d').date()
+            time_obj = Datetime.strptime(string, '%Y-%m-%d').astimezone().date()
         except ValueError:
             pass
         else:
             return time_obj
     if 5 <= str_len <= 8:
         try:
-            time_obj = Datetime.strptime(string, '%H:%M:%S').time()
+            time_obj = Datetime.strptime(string, '%H:%M:%S').astimezone().time()
         except ValueError:
             pass
         else:
@@ -269,7 +269,7 @@ def text_to_time(
                 int(value)
                 for value in result
             ]
-            time_obj = Datetime(year, month, day, hour, minute, second)
+            time_obj = Datetime(year, month, day, hour, minute, second).astimezone()
             return time_obj
 
     ### Type 'date'.
@@ -306,7 +306,7 @@ def to_time(obj: StructTime | float, raising: bool = True) -> Datetime: ...
 def to_time(obj: Any, raising: Literal[True] = True) -> NoReturn: ...
 
 @overload
-def to_time(obj: T, raising: Literal[False]) -> T: ...
+def to_time[T](obj: T, raising: Literal[False]) -> T: ...
 
 def to_time(
     obj: Any,
@@ -341,16 +341,16 @@ def to_time(
                 obj.tm_hour,
                 obj.tm_min,
                 obj.tm_sec
-            )
+            ).astimezone()
 
         ## Type 'float'.
         case int() | float():
             int_len, _ = digits(obj)
             match int_len:
                 case 10:
-                    time_obj = Datetime.fromtimestamp(obj)
+                    time_obj = Datetime.fromtimestamp(obj).astimezone()
                 case 13:
-                    time_obj = Datetime.fromtimestamp(obj / 1000)
+                    time_obj = Datetime.fromtimestamp(obj / 1000).astimezone()
                 case _:
                     time_obj = None
 
@@ -607,10 +607,7 @@ class TimeMark(Base):
                     if timedelta_str[1] == ':':
                         timedelta_str = '0' + timedelta_str
                     if row['timedelta'].days != 0:
-                        timedelta_str = '%sday %s' % (
-                            row['timedelta'].days,
-                            timedelta_str
-                        )
+                        timedelta_str = f'{row['timedelta'].days}day {timedelta_str}'
                 row['timedelta'] = timedelta_str
         df_info = DataFrame(data, index=indexes)
         df_info.fillna('-', inplace=True)

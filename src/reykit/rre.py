@@ -14,15 +14,15 @@ from re import (
     sub as re_sub,
     split as re_split,
     findall as re_findall,
-    S as RS,
+    DOTALL as RDOTALL,
     Match as RMatch
 )
 
 from .rdata import unique
 
 __all__ = (
-    'PATTERN_EMAIL',
-    'PATTERN_PHONE',
+    'PATTERN_IP',
+    'PATTERN_URL',
     'PATTERN_EMAIL',
     'PATTERN_PHONE',
     'PATTERN_CN',
@@ -64,7 +64,7 @@ def search(
     """
 
     # Search.
-    obj_re = re_search(pattern, text, RS)
+    obj_re = re_search(pattern, text, RDOTALL)
 
     # Return result.
     if obj_re is not None:
@@ -94,7 +94,7 @@ def findall(
     """
 
     # Find all.
-    result = re_findall(pattern, text, RS)
+    result = re_findall(pattern, text, RDOTALL)
 
     return result
 
@@ -125,7 +125,7 @@ def sub(
     count = count or 0
 
     # Replace.
-    result = re_sub(pattern, replace, text, count=count, flags=RS)
+    result = re_sub(pattern, replace, text, count=count, flags=RDOTALL)
 
     return result
 
@@ -152,7 +152,7 @@ def split(
     count = count or 0
 
     # Replace.
-    result = re_split(pattern, text, count, RS)
+    result = re_split(pattern, text, count, RDOTALL)
 
     return result
 

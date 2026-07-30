@@ -363,7 +363,7 @@ class File(Base):
             encode = None
 
         # Open.
-        io = open(self.path, mode, encoding=encode)
+        io = open(self.path, mode, encoding=encode) # noqa: SIM115
 
         return io
 
@@ -999,12 +999,12 @@ class Folder(Base):
         # Exist.
         exist = os_exists(self.path)
         if exist:
-            text = 'Directory already exists    | %s' % self.path
+            text = f'Directory already exists    | {self.path}'
 
         # Not exist.
         else:
             os_makedirs(self.path)
-            text = 'Directory creation complete | %s' % self.path
+            text = f'Directory creation complete | {self.path}'
 
         # Report.
         if echo:
@@ -1237,7 +1237,7 @@ class TempFile(Base):
                 throw(ValueError, type_)
 
         # Set attribute.
-        self.file = TemporaryFile(
+        self.file = TemporaryFile( # noqa: SIM115
             mode,
             suffix=suffix,
             dir=dir_
@@ -1653,9 +1653,9 @@ class TempFolder(Base):
         """
 
         # Join.
-        join_path = join_path(self.path, path)
+        joined_path = join_path(self.path, path)
 
-        return join_path
+        return joined_path
 
     @property
     def name(self) -> str:
@@ -2255,7 +2255,7 @@ def extract_docx_content(path: str) -> str:
                         for row in table.rows
                     ]
                 )
-                table_text = '\n%s\n' % table_text
+                table_text = f'\n{table_text}\n'
                 contents.append(table_text)
 
     ## Join.

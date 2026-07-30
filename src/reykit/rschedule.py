@@ -291,7 +291,7 @@ class Schedule(Base):
                 task(*args, **kwargs)
 
             # Status occurred error.
-            except BaseException: # noqa: BLE001
+            except BaseException:
                 data = {
                     'id': id_,
                     'update_time': ':NOW()',
@@ -385,7 +385,7 @@ class Schedule(Base):
         name_default = task.__name__
         *_, name_default = name_default.rsplit('.', 1)
         if ismodule(task):
-            task = getattr(task, 'main')
+            task = task.main
         if plan is None:
             plan = {}
         trigger = plan.get('trigger')
