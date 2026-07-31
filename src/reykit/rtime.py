@@ -610,7 +610,8 @@ class TimeMark(Base):
                         timedelta_str = f'{row['timedelta'].days}day {timedelta_str}'
                 row['timedelta'] = timedelta_str
         df_info = DataFrame(data, index=indexes)
-        df_info.fillna('-', inplace=True)
+        object_columns = df_info.select_dtypes(include='object').columns
+        df_info[object_columns] = df_info[object_columns].fillna('-')
 
         return df_info
 
