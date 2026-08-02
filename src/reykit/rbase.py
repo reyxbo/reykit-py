@@ -258,7 +258,7 @@ def throw(
                     for name, value in names_values
                 ]
             )
-        text = ' ' + text_value
+        text = f'{text.rstrip(',. ')}, {text_value}'
 
     # Throw exception.
     exception = exception(text)
