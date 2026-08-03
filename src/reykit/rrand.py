@@ -11,6 +11,7 @@ from typing import Literal, Self, ClassVar, overload
 from collections.abc import Sequence
 from string import digits as string_digits, ascii_letters as string_ascii_letters, punctuation as string_punctuation
 from math import ceil as math_ceil
+from os import urandom
 from random import Random
 from secrets import randbelow as secrets_randbelow
 from threading import get_ident as threading_get_ident
@@ -25,6 +26,7 @@ __all__ = (
     'randb',
     'randi',
     'randchar',
+    'randbyte',
     'randsort'
 )
 
@@ -345,6 +347,24 @@ def randchar(
     chars = ''.join(char_list)
 
     return chars
+
+def randbyte(length: int = 32) -> bytes:
+    """
+    Generate random bytes.
+
+    Parameters
+    ----------
+    length : Character length.
+
+    Returns
+    -------
+    Random bytes.
+    """
+
+    # Generate.
+    result = urandom(length)
+
+    return result
 
 def randsort[T](data: Sequence[T]) -> list[T]:
     """
