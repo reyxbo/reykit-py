@@ -546,15 +546,9 @@ class TimeMark(Base):
 
         return index
 
-    def get_report(self, title: str | None = None):
+    def get_report(self):
         """
         Return time mark report table.
-
-        Parameters
-        ----------
-        title : Print title.
-            - `None`: Not print.
-            - `str`: Print and use this title.
 
         Returns
         -------
