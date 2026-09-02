@@ -462,7 +462,7 @@ reykit 按功能划分为多个模块，各模块负责不同的通用工具及�
 | Python     | `>=3.12`                                                   |
 | 作者         | `Rey`                                                      |
 | 邮箱         | `reyxbo@163.com`                                           |
-| Homepage   | [reyxbo.com](https://www.reyxbo.com/release/python/reykit) |
+| Homepage   | [REYXBO](https://www.reyxbo.com/release/python/reykit) |
 | Repository | [reykit-py](https://github.com/reyxbo/reykit-py.git)       |
 
 ## 关键词

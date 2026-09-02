@@ -1,6 +1,6 @@
 [project]
 name = "reykit"
-version = "1.2.84"
+version = "1.2.85"
 description = "General-purpose utility method integration package."
 readme = "README.md"
 requires-python = ">=3.12"

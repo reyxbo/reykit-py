@@ -462,7 +462,7 @@ Main dependencies:
 | Python     | `>=3.12`                                                   |
 | Author     | `Rey`                                                      |
 | Email      | `reyxbo@163.com`                                           |
-| Homepage   | [reyxbo.com](https://www.reyxbo.com/release/python/reykit) |
+| Homepage   | [REYXBO](https://www.reyxbo.com/release/javascript/reykit) |
 | Repository | [reykit-py](https://github.com/reyxbo/reykit-py.git)       |
 
 ## Keywords
