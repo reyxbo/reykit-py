@@ -4,7 +4,8 @@
 @Time    : 2022-12-05
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Decorator methods.
+@Explain : Decorator module.
+    Provides methods for creating decorators and commonly used decorators.
 """
 
 from typing import Any, Literal, overload, NoReturn

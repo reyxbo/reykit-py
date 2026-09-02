@@ -4,7 +4,8 @@
 @Time    : 2022-12-05
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Time methods.
+@Explain : Time processing module.
+    Provides methods for time processing and execution time measurement.
 """
 
 from typing import Any, TypedDict, Literal, NoReturn, overload

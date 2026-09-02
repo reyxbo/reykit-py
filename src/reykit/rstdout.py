@@ -4,7 +4,8 @@
 @Time    : 2023-10-01
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Standard output and input methods.
+@Explain : Standard input/output module.
+    Provides methods for standard input/output and terminal printing.
 """
 
 from typing import Any, Literal, Final, ClassVar

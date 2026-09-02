@@ -4,7 +4,9 @@
 @Time    : 2023-06-16
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Table methods.
+@Explain : Table processing module.
+    Provides integrated table data processing methods and objects.
+    Supports conversion between different data structures.
 """
 
 from typing import Any, TypedDict, overload

@@ -4,7 +4,8 @@
 @Time    : 2022-12-19 20:06:20
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Multi task methods.
+@Explain : Multitasking module.
+    Provides integrated methods for threads, coroutines, and multitasking.
 """
 
 from typing import Any, Literal, overload

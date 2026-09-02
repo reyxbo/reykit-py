@@ -4,7 +4,8 @@
 @Time    : 2023-12-06
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : DLL file methods.
+@Explain : DLL file methods directory.
+    Provides methods for working with Windows system DLL files.
 
 Modules
 -------

@@ -4,7 +4,8 @@
 @Time    : 2022-12-11
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Regular expression methods.
+@Explain : Regular expression module.
+    Provides methods for regular expression processing.
 """
 
 from typing import Literal, overload

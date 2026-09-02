@@ -4,7 +4,8 @@
 @Time    : 2022-12-05
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Email methods.
+@Explain : E-mail module.
+    Provides integrated methods and objects for e-mail processing.
 """
 
 from smtplib import SMTP

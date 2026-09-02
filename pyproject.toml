@@ -1,11 +1,32 @@
 [project]
 name = "reykit"
-version = "1.2.83"
-description = "Kit method set."
+version = "1.2.84"
+description = "General-purpose utility method integration package."
 readme = "README.md"
 requires-python = ">=3.12"
 license = {file = "LICENSE"}
-keywords = ["rey", "reyxbo", "kit", "tool"]
+keywords = [
+    "rey",
+    "reyxbo",
+    "kit",
+    "dll-injection",
+    "email",
+    "image",
+    "log",
+    "net",
+    "os",
+    "random",
+    "regex",
+    "schedule",
+    "stdout",
+    "system",
+    "table",
+    "thread",
+    "async",
+    "text",
+    "time",
+    "decorator"
+]
 authors = [
     {name = "Rey", email = "reyxbo@163.com"}
 ]
@@ -32,7 +53,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://www.reyxbo.com"
+Homepage = "https://www.reyxbo.com/release/python/reykit"
 Repository = "https://github.com/reyxbo/reykit-py.git"
 
 [build-system]

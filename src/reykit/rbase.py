@@ -4,7 +4,8 @@
 @Time    : 2024-07-17
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Base methods.
+@Explain : Base methods module.
+    Provides common base methods and shared dependencies used by other modules.
 """
 
 from typing import Any, Literal, Self, NoReturn, overload, final

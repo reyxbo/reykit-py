@@ -4,7 +4,8 @@
 @Time    : 2022-12-08
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Text methods.
+@Explain : Text processing module.
+    Provides methods for text and string processing.
 """
 
 from typing import Any, Literal, overload

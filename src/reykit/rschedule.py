@@ -4,7 +4,8 @@
 @Time    : 2024-01-09
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Schedule methods.
+@Explain : Scheduled task module.
+    Provides integrated methods and objects for scheduled tasks.
 """
 
 from typing import Any

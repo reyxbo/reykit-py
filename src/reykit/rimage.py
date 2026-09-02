@@ -4,7 +4,8 @@
 @Time    : 2023-04-22
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Image methods.
+@Explain : Image processing module.
+    Provides methods for image processing.
 """
 
 from typing import Any

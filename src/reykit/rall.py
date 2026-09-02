@@ -4,7 +4,9 @@
 @Time    : 2022-12-08
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : All import methods.
+@Explain : Unified export module.
+    Provides convenient exports of all reykit module methods and objects.
+    It allows the functionality provided by the package to be imported centrally, reducing the need to import from multiple modules separately.
 """
 
 from .rbase import *

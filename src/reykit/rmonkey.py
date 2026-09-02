@@ -4,7 +4,8 @@
 @Time    : 2023-03-19
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Monkey patch methods.
+@Explain : Monkey patch module.
+    Provides Monkey Patch methods required by other modules.
 """
 
 __all__ = (

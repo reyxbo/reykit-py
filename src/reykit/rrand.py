@@ -4,7 +4,8 @@
 @Time    : 2023-04-22
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Random methods.
+@Explain : Random value module.
+    Provides methods for processing random values and random data.
 """
 
 from typing import Literal, Self, ClassVar, overload

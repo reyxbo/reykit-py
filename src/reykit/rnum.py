@@ -4,7 +4,8 @@
 @Time    : 2023-04-22
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Number methods.
+@Explain : Number processing module.
+    Provides methods for processing numbers and numeric values.
 """
 
 from typing import Any

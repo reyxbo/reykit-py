@@ -4,7 +4,8 @@
 @Time    : 2023-05-09
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Operation system methods.
+@Explain : Operating system module.
+    Provides integrated methods and objects for files, folders, temporary files, and operating system operations.
 """
 
 from typing import Any, Literal, TextIO, BinaryIO, overload, TYPE_CHECKING

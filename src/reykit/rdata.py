@@ -4,7 +4,8 @@
 @Time    : 2022-12-05
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Data methods.
+@Explain : Data processing module.
+    Provides integrated processing methods for Python basic types and commonly used data.
 """
 
 from typing import Any, TypedDict, Literal, overload

@@ -4,7 +4,8 @@
 @Time    : 2022-12-05
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Interpreter system methods.
+@Explain : Interpreter and system module.
+    Provides methods related to the Python interpreter and operating system.
 """
 
 from typing import Any, TypedDict, Literal, ClassVar, overload

@@ -4,7 +4,8 @@
 @Time    : 2022-12-08
 @Author  : Rey
 @Contact : reyxbo@163.com
-@Explain : Network methods.
+@Explain : Network module.
+    Provides network-related methods for HTTP, URL, Cookie, Socket, request caching, and more.
 """
 
 from typing import Any, Literal, TypedDict, NotRequired, overload
