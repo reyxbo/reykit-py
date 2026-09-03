@@ -65,6 +65,7 @@ class Schedule(Base):
         self,
         max_workers: int = 10,
         max_instances: int = 1,
+        max_wait: int = 60,
         coalesce: bool = True,
         block: bool = False,
         db_engine: DatabaseEngine | None = None,
@@ -77,6 +78,7 @@ class Schedule(Base):
         ----------
         max_workers : Maximum number of synchronized executions.
         max_instances : Maximum number of synchronized executions of tasks with the same ID.
+        max_wait : Maximum seconds of waiting for the tasks to start.
         coalesce : Whether to coalesce tasks with the same ID.
         block : Whether to block.
         db_engine : Database engine.
@@ -94,7 +96,8 @@ class Schedule(Base):
         executors = {'default': executor}
         job_defaults = {
             'coalesce': coalesce,
-            'max_instances': max_instances
+            'max_instances': max_instances,
+            'misfire_grace_time': max_wait
         }
         if block:
             scheduler = BlockingScheduler(
