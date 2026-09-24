@@ -19,7 +19,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.job import Job
 from reydb import rorm, DatabaseEngine
-from reykit.rtime import now
 
 from .rbase import Base, throw
 
