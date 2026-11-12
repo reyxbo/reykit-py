@@ -8,7 +8,7 @@
     Provides methods for image processing.
 """
 
-from typing import Any
+from typing import Any, Literal
 from io import BytesIO
 from qrcode import make as qrcode_make
 from qrcode.image.pil import PilImage
@@ -20,17 +20,21 @@ from .ros import File
 from .rrand import randchar
 
 __all__ = (
+    'PILImageFormat',
     'Image',
     'encode_qrcode',
     'decode_qrcode',
     'compress_image',
     'to_pil_image',
+    'get_image_bytes',
     'generate_captcha_image'
 )
 
 # Monkey patch.
 Image_ = monkey_path_pil_image_get_bytes()
 Image = Image_
+
+type PILImageFormat = Literal['AVIF', 'BLP', 'BMP', 'DIB', 'BUFR', 'PCX', 'DDS', 'EPS', 'GIF', 'GRIB', 'HDF5', 'PNG', 'JPEG2000', 'ICNS', 'ICO', 'IM', 'JPEG', 'TIFF', 'MPO', 'MSP', 'PALM', 'PDF', 'PPM', 'QOI', 'SGI', 'SPIDER', 'TGA', 'WEBP', 'WMF', 'XBM']
 
 def encode_qrcode(text: str, path: str | None = None) -> bytes:
     """
@@ -202,6 +206,33 @@ def to_pil_image(source: str | bytes) -> Image:
         pil_image = pil_open(bytes_io)
 
     return pil_image
+
+def get_image_bytes(
+    source: str | bytes,
+    format: PILImageFormat = 'JPEG'
+) -> bytes:
+    """
+    Get image bytes data.
+
+    Parameters
+    ----------
+    source : Image source data.
+        - `str`: Image file path.
+        - `bytes`: Image bytes data.
+    format : Convert format.
+
+    Returns
+    -------
+    Image bytes data.
+    """
+
+    # Extract.
+    image = to_pil_image(source)
+    bytes_io = BytesIO()
+    image.save(bytes_io, format)
+    image_bytes = bytes_io.getvalue()
+
+    return image_bytes
 
 def generate_captcha_image(
     text: int | str = 5,

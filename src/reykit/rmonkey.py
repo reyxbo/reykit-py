@@ -302,12 +302,19 @@ def monkey_path_pil_image_get_bytes():
 
     # Import.
     from PIL.Image import Image
-    from io import BytesIO
     from .rbase import Base
+    from .rimage import PILImageFormat, get_image_bytes
 
-    def method_get_bytes(self: Image) -> bytes:
+    def method_get_bytes(
+        self: Image,
+        format: PILImageFormat = 'JPEG'
+    ) -> bytes:
         """
         Get image bytes data.
+
+        Parameters
+        ----------
+        format : Convert format.
 
         Returns
         -------
@@ -315,9 +322,7 @@ def monkey_path_pil_image_get_bytes():
         """
 
         # Extract.
-        bytes_io = BytesIO()
-        self.save(bytes_io, 'JPEG')
-        image_bytes = bytes_io.getvalue()
+        image_bytes = get_image_bytes(self, format)
 
         return image_bytes
 
