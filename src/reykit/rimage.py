@@ -30,11 +30,11 @@ __all__ = (
     'generate_captcha_image'
 )
 
+type PILImageFormat = Literal['AVIF', 'BLP', 'BMP', 'DIB', 'BUFR', 'PCX', 'DDS', 'EPS', 'GIF', 'GRIB', 'HDF5', 'PNG', 'JPEG2000', 'ICNS', 'ICO', 'IM', 'JPEG', 'TIFF', 'MPO', 'MSP', 'PALM', 'PDF', 'PPM', 'QOI', 'SGI', 'SPIDER', 'TGA', 'WEBP', 'WMF', 'XBM']
+
 # Monkey patch.
 Image_ = monkey_path_pil_image_get_bytes()
 Image = Image_
-
-type PILImageFormat = Literal['AVIF', 'BLP', 'BMP', 'DIB', 'BUFR', 'PCX', 'DDS', 'EPS', 'GIF', 'GRIB', 'HDF5', 'PNG', 'JPEG2000', 'ICNS', 'ICO', 'IM', 'JPEG', 'TIFF', 'MPO', 'MSP', 'PALM', 'PDF', 'PPM', 'QOI', 'SGI', 'SPIDER', 'TGA', 'WEBP', 'WMF', 'XBM']
 
 def encode_qrcode(text: str, path: str | None = None) -> bytes:
     """
@@ -208,7 +208,7 @@ def to_pil_image(source: str | bytes) -> Image:
     return pil_image
 
 def get_image_bytes(
-    source: str | bytes,
+    source: str | bytes | Image,
     format: PILImageFormat = 'JPEG'
 ) -> bytes:
     """
@@ -219,6 +219,7 @@ def get_image_bytes(
     source : Image source data.
         - `str`: Image file path.
         - `bytes`: Image bytes data.
+        - `Image`: `Image` instance.
     format : Convert format.
 
     Returns
@@ -227,7 +228,10 @@ def get_image_bytes(
     """
 
     # Extract.
-    image = to_pil_image(source)
+    if isinstance(source, (str, bytes)):
+        image = to_pil_image(source)
+    else:
+        image = source
     bytes_io = BytesIO()
     image.save(bytes_io, format)
     image_bytes = bytes_io.getvalue()

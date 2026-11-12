@@ -303,7 +303,7 @@ def monkey_path_pil_image_get_bytes():
     # Import.
     from PIL.Image import Image
     from .rbase import Base
-    from .rimage import PILImageFormat, get_image_bytes
+    from .rimage import PILImageFormat
 
     def method_get_bytes(
         self: Image,
@@ -320,6 +320,9 @@ def monkey_path_pil_image_get_bytes():
         -------
         Image bytes data.
         """
+
+        # Import.
+        from .rimage import get_image_bytes
 
         # Extract.
         image_bytes = get_image_bytes(self, format)
