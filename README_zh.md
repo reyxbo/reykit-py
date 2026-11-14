@@ -441,7 +441,7 @@ reykit 按功能划分为多个模块，各模块负责不同的通用工具及�
 * `pyzbar`
 * `pdfplumber`
 * `psutil`
-* `pymem`
+* `PyMemoryEditor`
 * `python-docx`
 * `qrcode`
 * `requests`
