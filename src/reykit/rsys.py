@@ -29,7 +29,7 @@ from psutil import (
     Process
 )
 from subprocess import Popen, PIPE
-from pymem import Pymem
+from PyMemoryEditor import OpenProcess
 from argparse import ArgumentParser
 from datetime import datetime
 from webbrowser import open as webbrowser_open
@@ -746,6 +746,27 @@ def get_idle_port(min: int = 49152) -> int:
         else:
             return min
 
+def _open_process(process: int | str) -> OpenProcess:
+    """
+    Open process memory.
+
+    Parameters
+    ----------
+    process : Process ID or name.
+
+    Returns
+    -------
+    Process memory instance.
+    """
+
+    # Open.
+    if type(process) == int:
+        memory = OpenProcess(pid=process)
+    else:
+        memory = OpenProcess(name=process, case_sensitive=False, exact_match=False)
+
+    return memory
+
 def memory_read(
     process: int | str,
     dll: str,
@@ -765,22 +786,24 @@ def memory_read(
     Memory value.
     """
 
-    # Get DLL address.
-    pymem = Pymem(process)
-    for module in pymem.list_modules():
-        if module.name == dll:
-            dll_address: int = module.lpBaseOfDll
-            break
+    # Open process.
+    with _open_process(process) as memory:
 
-    ## Throw exception.
-    else:
-        throw(AssertionError, dll_address)
+        # Get DLL address.
+        for module in memory.get_modules():
+            if module.name == dll:
+                dll_address: int = module.base_address
+                break
 
-    # Get memory address.
-    memory_address = dll_address + offset
+        ## Throw exception.
+        else:
+            throw(AssertionError, dll_address)
 
-    # Read.
-    value = pymem.read_int(memory_address)
+        # Get memory address.
+        memory_address = dll_address + offset
+
+        # Read.
+        value = memory.read_int(memory_address)
 
     return value
 
@@ -801,18 +824,20 @@ def memory_write(
     value : Memory value.
     """
 
-    # Get DLL address.
-    pymem = Pymem(process)
-    for module in pymem.list_modules():
-        if module.name == dll:
-            dll_address: int = module.lpBaseOfDll
-            break
+    # Open process.
+    with _open_process(process) as memory:
 
-    # Get memory address.
-    memory_address = dll_address + offset
+        # Get DLL address.
+        for module in memory.get_modules():
+            if module.name == dll:
+                dll_address: int = module.base_address
+                break
 
-    # Read.
-    pymem.write_int(memory_address, value)
+        # Get memory address.
+        memory_address = dll_address + offset
+
+        # Write.
+        memory.write_int(memory_address, value)
 
 def open_browser(url: str) -> bool:
     """

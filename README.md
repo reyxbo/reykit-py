@@ -441,7 +441,7 @@ Main dependencies:
 * `pyzbar`
 * `pdfplumber`
 * `psutil`
-* `pymem`
+* `PyMemoryEditor`
 * `python-docx`
 * `qrcode`
 * `requests`
